@@ -1,0 +1,3 @@
+127.0.0.1	<%= fqdn %>	<%= hostname %>	localhost.localdomain	localhost
+10.223.75.10 puppet     puppet.cloudstack.org
+
