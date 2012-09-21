@@ -1,12 +1,12 @@
 class ssh { 
 
   package { openssh-server: 
-    name     => case $operatingsystem ? {
+    name     => $operatingsystem? {
       centos => ["openssh-server", "openssh-clients"],
       rhel   => ["openssh-server", "openssh-clients"],
       debian => ["openssh-server", "openssh-client"],
       ubuntu => ["openssh-server", "openssh-client"],
-    }
+    },
     ensure => latest,
   }
 

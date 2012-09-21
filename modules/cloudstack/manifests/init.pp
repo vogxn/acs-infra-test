@@ -13,13 +13,15 @@ class cloudstack {
   include cloudstack::no_selinux
 
   #TODO: Repo replace from nodes.pp
-  $repo = "http://10.223.75.10/repo/rpm/master/"
-  #TODO: Should this be fixed?
-  $cs_mgmt_server = "10.223.75.111"
+  $yumrepo = "puppet://puppet/cloudstack/yumrepo"
+  #Wido D. Hollander's repo
+  $aptrepo = "http://cloudstack.apt-get.eu/ubuntu"
+
+  #TODO: Update to latest systemvm urls
   $sysvm_url_kvm = "http://download.cloud.com/releases/2.2.0/systemvm.qcow2.bz2"
   $sysvm_url_xen = "http://download.cloud.com/releases/2.2.0/systemvm.vhd.bz2"
 
-  $packages = ["wget", "mysql-server"] 
+  $packages = ["wget"] 
   package { $packages: 
       ensure => installed,
   }
@@ -29,9 +31,9 @@ class cloudstack {
     name     => $operatingsystem ? {
       centos => "nfs-utils",
       redhat => "nfs-utils",
-      debian => ["nfs-common", "nfs-kernel-server"]
+      debian => ["nfs-common", "nfs-kernel-server"],
       ubuntu => ["nfs-common", "nfs-kernel-server"]
-    }
+    },
     ensure => installed,
   }
 
@@ -42,13 +44,8 @@ class cloudstack {
       redhat => "cdw",
       debian => "genisoimage",
       ubuntu => "genisoimage",
-    }
+    },
     ensure => installed,
-  }
-
-  service { "mysqld":
-    ensure  => running,
-    require => Package["mysql-server"],
   }
 
   service { "nfs":
@@ -56,25 +53,33 @@ class cloudstack {
     require => Package["nfs-utils"],
   }
 
-  #Fetch latest from repo
-  exec { "/usr/bin/wget -m $repo -nH --cut-dirs=2 -np -L -P cloudstack --reject=index.html*":
-    cwd => "/tmp",
-    creates => "/tmp/cloudstack",
-  }
-
   file { "/tmp/cloudstack":
     ensure => directory,
   }
 
-  exec { "/bin/mv master/build* master/build":
-    cwd     => "/tmp/cloudstack/",
-    creates => "/tmp/cloudstack/master/build",
-  }
+  #Fetch latest from repo
+  #exec { "/usr/bin/wget -m $repo -nH --cut-dirs=2 -np -L -P cloudstack --reject=index.html*":
+  #  cwd => "/tmp",
+  #  creates => "/tmp/cloudstack",
+  #}
+
+  #exec { "/bin/mv master/build* master/build":
+  #  cwd     => "/tmp/cloudstack/",
+  #  creates => "/tmp/cloudstack/master/build",
+  #}
 
   case $operatingsystem {
     centos,redhat : {
+      #TODO: Latest cloudstack build copied to puppetmaster
+      file { "/tmp/cloudstack/" :
+        source  => "puppet://puppet/cloudstack/yumrepo",
+        recurse => true,
+        owner   => "root",
+        mode    => 0644,
+        group   => "root",
+      }
       yumrepo { "cstemp":
-        baseurl  => "file:///tmp/cloudstack/master/build",
+        baseurl  => "file:///tmp/cloudstack/",
         enabled  => 1,
         gpgcheck => 0,
         name     => "cstemp"
@@ -84,8 +89,20 @@ class cloudstack {
          ensure  => installed,
          require => Yumrepo["cstemp"],
       }
+      file { "/etc/yum.repos.d/cstemp.repo":
+        ensure => absent,
+      }
     }
     ubuntu, debian: {
+      exec { "echo 'deb $aptrepo $(lsb_release -s -c) 4.0' > /etc/apt/sources.list.d/cloudstack.list": 
+        creates => "/etc/apt/sources.list.d/cloudstack.list",
+      }
+      exec { "wget -O - $aptrepo/release.asc | apt-key add -": 
+      }
+      $packagelist =  [ "cloud-server", "cloud-client", "cloud-usage"]
+      package { $packagelist:
+         ensure  => installed,
+      }
     }
     fedora : {
     }
