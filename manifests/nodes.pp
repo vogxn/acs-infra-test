@@ -1,5 +1,14 @@
 #Apache CloudStack - infrastructure and nodes
 
+node 'learn' {
+  #  include cloudstack
+  include mysql
+  include ntp
+  include ssh
+  include dhcpd
+  include puppet
+}
+
 node 'puppet' {
 	include puppet::master
   include ntp
