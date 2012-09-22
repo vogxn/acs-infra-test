@@ -2,7 +2,7 @@
 #
 
 class common::data {
-   $nameservers = ["10.223.110.254", "8.8.8.8"]
+  $nameservers = ["10.223.110.254", "8.8.8.8"]
 }
 
 class cloudstack {
@@ -129,7 +129,6 @@ class cloudstack::agent {
   package { NetworkManager:
     ensure => absent,
   }
-
 }
 
 class cloudstack::no_selinux {
@@ -229,12 +228,14 @@ class cloudstack::files {
   }
 
   case $operatingsystem {
-  file { "/etc/resolv.conf":
-    content => template("cloudstack/resolv.conf"),
+    redhat,centos: { 
+    file { "/etc/resolv.conf":
+      content => template("cloudstack/resolv.conf"),
+    }
+    file { "/etc/sysconfig/network-scripts/ifcfg-eth0":
+      content => template("cloudstack/ifcfg-eth0"),
+    }
+    }
+    default: {}
   }
-
-  file { "/etc/sysconfig/network-scripts/ifcfg-eth0":
-    content => template("cloudstack/ifcfg-eth0"),
-  }
- }
 }
