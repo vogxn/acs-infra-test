@@ -95,18 +95,19 @@ class cloudstack {
       }
     }
     ubuntu, debian: {
-      notify { "$aptrepo":
-        message => "using repo $aptrepo",
-      }
       file { "/etc/apt/sources.list.d/cloudstack.list":
         ensure  => present,
         content => "deb ${aptrepo} ${lsbdistcodename} 4.0",
       }
       exec { "wget -O - ${aptkey} | apt-key add -": 
+        path => ["/usr/bin", "/bin"],
+      }
+      exec { "apt-get update":
+        path => ["/usr/bin", "/bin"],
       }
       $packagelist =  [ "cloud-server", "cloud-client"]
       package { $packagelist:
-         ensure  => installed,
+         ensure  => latest,
          require => File["/etc/apt/sources.list.d/cloudstack.list"],
       }
     }
