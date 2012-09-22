@@ -19,6 +19,7 @@ class cloudstack {
   $yumrepo = "puppet://puppet/cloudstack/yumrepo"
   #Wido D. Hollander's repo
   $aptrepo = "http://cloudstack.apt-get.eu/ubuntu"
+  $aptkey = "http://cloudstack.apt-get.eu/release.asc"
 
   #TODO: Update to latest systemvm urls
   $sysvm_url_kvm = "http://download.cloud.com/releases/2.2.0/systemvm.qcow2.bz2"
@@ -101,7 +102,7 @@ class cloudstack {
         ensure  => present,
         content => "deb ${aptrepo} ${lsbdistcodename} 4.0",
       }
-      exec { "wget -O - ${aptrepo}/release.asc | apt-key add -": 
+      exec { "wget -O - ${aptkey} | apt-key add -": 
       }
       $packagelist =  [ "cloud-server", "cloud-client"]
       package { $packagelist:
