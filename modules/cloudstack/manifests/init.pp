@@ -223,14 +223,14 @@ class cloudstack::files {
     content => template("cloudstack/hosts"),
   }
 
-  file { "/etc/sysconfig/network":
-    content => template("cloudstack/network"),
+  file { "/etc/resolv.conf":
+    content => template("cloudstack/resolv.conf"),
   }
 
   case $operatingsystem {
     redhat,centos: { 
-    file { "/etc/resolv.conf":
-      content => template("cloudstack/resolv.conf"),
+    file { "/etc/sysconfig/network":
+      content => template("cloudstack/network"),
     }
     file { "/etc/sysconfig/network-scripts/ifcfg-eth0":
       content => template("cloudstack/ifcfg-eth0"),
