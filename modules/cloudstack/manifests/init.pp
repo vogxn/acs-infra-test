@@ -43,7 +43,11 @@ class cloudstack {
   }
 
   service { "nfs":
-    ensure => running,
+    name      => $operatingsystem? {
+      ubuntu  => "nfs-kernel-server",
+      default => "nfs"
+    }
+    ensure  => running,
     require => Package["nfs-utils"],
   }
 
@@ -90,7 +94,7 @@ class cloudstack {
       }
     }
     ubuntu, debian: {
-      exec { "echo 'deb $aptrepo $(lsb_release -s -c) 4.0' > /etc/apt/sources.list.d/cloudstack.list": 
+      exec { "echo \"deb $aptrepo $(lsb_release -s -c) 4.0\" > /etc/apt/sources.list.d/cloudstack.list": 
         creates => "/etc/apt/sources.list.d/cloudstack.list",
       }
       exec { "wget -O - $aptrepo/release.asc | apt-key add -": 
