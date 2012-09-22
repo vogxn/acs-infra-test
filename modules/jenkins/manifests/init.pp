@@ -25,40 +25,19 @@ class jenkins {
     ensure => true,
   }
 
-  include nginx
-  nginx::resource::vhost { "jenkins.cloudstack.org":
-    ensure => present,
-    proxy  => 'http://localhost:8080',
+  iptables { 'http80':
+    proto => 'tcp',
+    dport => '80',
+    jump  => 'ACCEPT',
   }
 
-  firewall { '80 allow http':
-    proto       => 'tcp',
-    dport       => '80',
-    action        => 'accept',
-  }
-
-  firewall { '8080 allow http-alt':
+  iptables { 'http8080':
     ensure => absent,
-    proto       => 'tcp',
-    dport       => '8080',
-    action        => 'accept',
-  }
-
-  cron { commit_changes_to_SCM:
-    command => "( cd /var/lib/jenkins && git add . && git commit -a -m 'routine update' && git push -q origin master ) >/dev/null",
-    user => jenkins,
-    minute  => '*/30',
+    proto  => 'tcp',
+    dport  => '8080',
+    action => 'ACCEPT',
   }
 
   users::priv_user { 'edison': }
   users::priv_user { 'prasanna': }
-
-  file { "/var/lib/jenkins/cs_checks.xml":
-    ensure => present, 
-    owner => "jenkins", 
-    group => "jenkins",
-    mode => 644,
-    source => "puppet://puppet/jenkins/cs_checks.xml",
-  }
-
 }
