@@ -15,7 +15,7 @@ class ssh {
       centos,redhat => "sshd",
       ubuntu,debian => "ssh",
       default       => "sshd",
-    }
+    },
     ensure    => running,
     enable    => true,
     hasstatus => true,
