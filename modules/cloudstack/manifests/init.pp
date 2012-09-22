@@ -2,7 +2,7 @@
 
 class cloudstack::no_selinux {
   file { "/etc/selinux/config":
-    source => "puppet://puppet/cloudstack/config",
+    source  => "puppet://puppet/cloudstack/config",
   }
   exec { "/usr/sbin/setenforce 0":
     onlyif => "/usr/sbin/getenforce | grep Enforcing",
@@ -10,7 +10,10 @@ class cloudstack::no_selinux {
 }
 
 class cloudstack {
-  include cloudstack::no_selinux
+  case $operatingsystem  {
+    centos: { include cloudstack::no_selinux }
+    redhat: { include cloudstack::no_selinux }
+  }
 
   #TODO: Repo replace from nodes.pp
   $yumrepo = "puppet://puppet/cloudstack/yumrepo"
