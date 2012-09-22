@@ -9,7 +9,13 @@ class ntp {
   }
 
   service { "ntpd":
-    ensure => running,
+    name     => $operatingsystem? {
+      centos => "ntpd",
+      redhat => "ntpd",
+      ubuntu => "ntp",
+      default => "ntpd",
+    },
+    ensure   => running,
   }
 
   cron { 'ntpdate':
