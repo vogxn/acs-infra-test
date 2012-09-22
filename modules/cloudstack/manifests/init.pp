@@ -38,13 +38,7 @@ class cloudstack {
   }
 
   #Needed for systemvm.iso
-  package { "mkisofs":
-    name => $operatingsystem ? {
-      centos => "cdw",
-      redhat => "cdw",
-      debian => "genisoimage",
-      ubuntu => "genisoimage",
-    },
+  package { "genisoimage":
     ensure => installed,
   }
 
@@ -71,20 +65,22 @@ class cloudstack {
   case $operatingsystem {
     centos,redhat : {
       #TODO: Latest cloudstack build copied to puppetmaster
-      file { "/tmp/cloudstack/" :
+      file { "build" :
         source  => "puppet://puppet/cloudstack/yumrepo",
         recurse => true,
         owner   => "root",
         mode    => 0644,
         group   => "root",
+        ensure  => directory,
+        path    => "/tmp/cloudstack",
       }
       yumrepo { "cstemp":
-        baseurl  => "file:///tmp/cloudstack/",
+        baseurl  => "file:///tmp/cloudstack/build",
         enabled  => 1,
         gpgcheck => 0,
         name     => "cstemp"
       }
-      $packagelist =  [ "cloud-server", "cloud-client", "cloud-usage"]
+      $packagelist =  [ "cloud-server", "cloud-client"]
       package { $packagelist:
          ensure  => installed,
          require => Yumrepo["cstemp"],
@@ -99,7 +95,7 @@ class cloudstack {
       }
       exec { "wget -O - $aptrepo/release.asc | apt-key add -": 
       }
-      $packagelist =  [ "cloud-server", "cloud-client", "cloud-usage"]
+      $packagelist =  [ "cloud-server", "cloud-client"]
       package { $packagelist:
          ensure  => installed,
       }

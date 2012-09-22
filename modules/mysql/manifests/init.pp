@@ -1,8 +1,8 @@
 class mysql {
   package { "mysql-server":
     name     => $operatingsystem? {
-      centos => ["mysql-server", "mysql-connector-java", "mysql"],
-      redhat => ["mysql-server", "mysql-connector-java", "mysql"],
+      centos => ["mysql-server", "mysql"],
+      redhat => ["mysql-server", "mysql"],
       debian => ["mysql-server", "mysql-client"],
       ubuntu => ["mysql-server", "mysql-client"],
     },

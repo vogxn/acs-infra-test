@@ -3,7 +3,7 @@ class ssh {
   package { openssh-server: 
     name     => $operatingsystem? {
       centos => ["openssh-server", "openssh-clients"],
-      rhel   => ["openssh-server", "openssh-clients"],
+      redhat => ["openssh-server", "openssh-clients"],
       debian => ["openssh-server", "openssh-client"],
       ubuntu => ["openssh-server", "openssh-client"],
     },
@@ -58,9 +58,9 @@ class ssh {
     seluser  => system_u,
   }
 
-  firewall { "permit inbound ssh":
+  iptables { "ssh":
     proto   => "tcp",
     dport   => "22",
-    action  => "accept",
+    jump  => "ACCEPT",
   }
 }
