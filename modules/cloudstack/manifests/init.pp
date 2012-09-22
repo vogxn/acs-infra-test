@@ -51,10 +51,6 @@ class cloudstack {
     require => Package["nfs-utils"],
   }
 
-  file { "/tmp/cloudstack":
-    ensure => directory,
-  }
-
   #Fetch latest from repo
   #exec { "/usr/bin/wget -m $repo -nH --cut-dirs=2 -np -L -P cloudstack --reject=index.html*":
   #  cwd => "/tmp",
@@ -69,7 +65,7 @@ class cloudstack {
   case $operatingsystem {
     centos,redhat : {
       #TODO: Latest cloudstack build copied to puppetmaster
-      file { "build" :
+      file { "/tmp/cloudstack" :
         source  => "puppet://puppet/cloudstack/yumrepo",
         recurse => true,
         owner   => "root",
@@ -79,10 +75,11 @@ class cloudstack {
         path    => "/tmp/cloudstack",
       }
       yumrepo { "cstemp":
-        baseurl  => "file:///tmp/cloudstack/build",
+        baseurl  => "file:///tmp/cloudstack",
         enabled  => 1,
         gpgcheck => 0,
-        name     => "cstemp"
+        name     => "cstemp",
+	require => File["/tmp/cloudstack"],
       }
       $packagelist =  [ "cloud-server", "cloud-client"]
       package { $packagelist:

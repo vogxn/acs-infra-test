@@ -12,8 +12,10 @@ class ssh {
 
   service { sshd:
     name            => $operatingsystem? {
-      centos,redhat => "sshd",
-      ubuntu,debian => "ssh",
+      centos => "sshd",
+      redhat => "sshd",
+      ubuntu => "ssh",
+      debian => "ssh",
       default       => "sshd",
     },
     ensure    => running,

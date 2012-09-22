@@ -11,10 +11,12 @@ class mysql {
 
   service { "mysqld":
     name            => $operatingsystem? {
-      centos,redhat => "mysqld",
-      ubuntu,debian => "mysql",
+      redhat => "mysqld",
+      centos => "mysqld",
+      debian => "mysql",
+      ubuntu => "mysql",
       default       => "mysqld",
-    }
+    },
     ensure     => running,
     enable     => true,
     hasstatus  => true,
