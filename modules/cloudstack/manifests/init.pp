@@ -94,14 +94,19 @@ class cloudstack {
       }
     }
     ubuntu, debian: {
-      exec { "echo \"deb $aptrepo $(lsb_release -s -c) 4.0\" > /etc/apt/sources.list.d/cloudstack.list": 
-        creates => "/etc/apt/sources.list.d/cloudstack.list",
+      notify { "$aptrepo":
+        message => "using repo $aptrepo",
       }
-      exec { "wget -O - $aptrepo/release.asc | apt-key add -": 
+      file { "/etc/apt/sources.list.d/cloudstack.list":
+        ensure  => present,
+        content => "deb ${aptrepo} ${lsbdistcodename} 4.0",
+      }
+      exec { "wget -O - ${aptrepo}/release.asc | apt-key add -": 
       }
       $packagelist =  [ "cloud-server", "cloud-client"]
       package { $packagelist:
          ensure  => installed,
+         require => File["/etc/apt/sources.list.d/cloudstack.list"],
       }
     }
     fedora : {
