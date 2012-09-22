@@ -46,7 +46,7 @@ class cloudstack {
     name      => $operatingsystem? {
       ubuntu  => "nfs-kernel-server",
       default => "nfs"
-    }
+    },
     ensure  => running,
     require => Package["nfs-utils"],
   }
