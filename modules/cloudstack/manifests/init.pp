@@ -1,4 +1,9 @@
 #Apache Cloudstack - Module for the Management Server and Agent
+#
+
+class common::data {
+   $nameservers = ["10.223.110.254", "8.8.8.8"]
+}
 
 class cloudstack {
   case $operatingsystem  {
@@ -7,12 +12,8 @@ class cloudstack {
   }
   include cloudstack::repo
   include cloudstack::ports
-
-  #TODO: Repo replace from nodes.pp
-  $yumrepo = "puppet://puppet/cloudstack/yumrepo"
-  #Wido D. Hollander's repo
-  $aptrepo = "http://cloudstack.apt-get.eu/ubuntu"
-  $aptkey = "http://cloudstack.apt-get.eu/release.asc"
+  include cloudstack::files
+  include common::data
 
   #TODO: Update to latest systemvm urls
   $sysvm_url_kvm = "http://download.cloud.com/releases/2.2.0/systemvm.qcow2.bz2"
@@ -70,16 +71,6 @@ class cloudstack {
     }
   }
 
-  file { "/etc/sudoers":
-    source => "puppet://puppet/cloudstack/sudoers",
-    mode   => 440,
-    owner  => root,
-    group  => root,
-  }
-
-  file { "/etc/hosts":
-    content => template("cloudstack/hosts"),
-  }
 }
 
 class cloudstack::agent {
@@ -89,6 +80,8 @@ class cloudstack::agent {
   }
   include cloudstack::repo
   include cloudstack::ports
+  include cloudstack::files
+  include common::data
 
   case $operatingsystem {
     centos,redhat : {
@@ -97,15 +90,12 @@ class cloudstack::agent {
          ensure  => installed,
          require => Yumrepo["cstemp"],
       }
-      file { "/etc/yum.repos.d/cstemp.repo":
-        ensure => absent,
-      }
     }
     ubuntu, debian: {
       $packagelist =  [ "cloud-agent" ]
       package { $packagelist:
          ensure  => latest,
-         require => File["/etc/apt/sources.list.d/cloudstack.list"],
+         require => [File["/etc/apt/sources.list.d/cloudstack.list"], Exec["apt-get update"]],
       }
     }
     fedora : {
@@ -114,45 +104,32 @@ class cloudstack::agent {
 
   exec { "cloud-setup-agent":
     creates  => "/var/log/cloud/setupAgent.log",
-    requires => [ Package[cloud-agent],
+    require => [ Package[cloud-agent],
     Package[NetworkManager],
     File["/etc/sudoers"],
     File["/etc/cloud/agent/agent.properties"],
-    File["/etc/sysconfig/network-scripts/ifcfg-eth0"],
     File["/etc/hosts"],
-    File["/etc/sysconfig/network"],
     File["/etc/resolv.conf"],
     Service["network"], ]
   }
 
   file { "/etc/cloud/agent/agent.properties":
     ensure   => present,
-    requires => Package[cloud-agent],
+    require => Package[cloud-agent],
     content  => template("cloudstack/agent.properties")
   }
 
-  file { "/etc/sysconfig/network-scripts/ifcfg-eth0":
-    content => template("cloudstack/ifcfg-eth0"),
-  }
 
   service { network:
     ensure    => running,
-    enabed    => true,
     hasstatus => true, 
-    requires  => [ Package[NetworkManager], File["/etc/sysconfig/network-scripts/ifcfg-eth0"], ]
+    require  => Package[NetworkManager]
   }
 
   package { NetworkManager:
     ensure => absent,
   }
 
-  file { "/etc/sysconfig/network":
-    content => template("cloudstack/network"),
-  }
-
-  file { "/etc/resolv.conf":
-    content => template("cloudstack/resolv.conf"),
-  }
 }
 
 class cloudstack::no_selinux {
@@ -165,6 +142,12 @@ class cloudstack::no_selinux {
 }
 
 class cloudstack::repo {
+  #TODO: Repo replace from nodes.pp
+  $yumrepo = "puppet://puppet/cloudstack/yumrepo"
+  #Wido D. Hollander's repo
+  $aptrepo = "http://cloudstack.apt-get.eu/ubuntu"
+  $aptkey = "http://cloudstack.apt-get.eu/release.asc"
+
   case $operatingsystem {
     centos,redhat : {
       file { "/tmp/cloudstack" :
@@ -225,4 +208,33 @@ class cloudstack::ports {
     dport => 2049,
     jump  => "ACCEPT",
   }
+}
+
+class cloudstack::files {
+  include common::data
+  $nameservers = $common::data::nameservers
+  file { "/etc/sudoers":
+    source => "puppet://puppet/cloudstack/sudoers",
+    mode   => 440,
+    owner  => root,
+    group  => root,
+  }
+
+  file { "/etc/hosts":
+    content => template("cloudstack/hosts"),
+  }
+
+  file { "/etc/sysconfig/network":
+    content => template("cloudstack/network"),
+  }
+
+  case $operatingsystem {
+  file { "/etc/resolv.conf":
+    content => template("cloudstack/resolv.conf"),
+  }
+
+  file { "/etc/sysconfig/network-scripts/ifcfg-eth0":
+    content => template("cloudstack/ifcfg-eth0"),
+  }
+ }
 }
