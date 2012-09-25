@@ -31,7 +31,7 @@ class base {
     action => 'reject',
   }
 
-  resources { 'firewall':
-    purge => false,
-  }
+  #  resources { 'firewall':
+  #  purge => false,
+  #}
 }
