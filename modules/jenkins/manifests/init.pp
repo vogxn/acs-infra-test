@@ -10,11 +10,11 @@ class jenkins {
   package { jenkins: ensure => present }
   package { 'java-1.7.0-openjdk': ensure => present}
   package { 'java-1.7.0-openjdk-devel': ensure => present}
-  package { dejavu-lgc-sans-fonts: ensure => present}
-  package { dejavu-lgc-sans-mono-fonts: ensure => present}
+  #package { dejavu-lgc-sans-fonts: ensure => present}
+  #package { dejavu-lgc-sans-mono-fonts: ensure => present}
   package { tomcat6: ensure => present}
   package { git: ensure => latest}
-  package { publican: ensure => latest}
+  #package { publican: ensure => latest}
   package { mysql-connector-java: ensure => present}
   package { maven: ensure => present} 
   package { wget: ensure => present} 
@@ -31,7 +31,7 @@ class jenkins {
     jump  => 'ACCEPT',
   }
 
-  iptables { 'http8080':
+  firewall { 'http8080':
     ensure => absent,
     proto  => 'tcp',
     dport  => '8080',
