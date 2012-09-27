@@ -14,6 +14,7 @@ class cloudstack {
   include cloudstack::ports
   include cloudstack::files
   include common::data
+  include mysql
 
   #TODO: Update to latest systemvm urls
   $sysvm_url_kvm = "http://download.cloud.com/releases/2.2.0/systemvm.qcow2.bz2"
@@ -70,6 +71,14 @@ class cloudstack {
     fedora : {
     }
   }
+
+  exec {"cloud-setup-databases cloud:cloud@localhost --deploy-as=root":
+    creates => "/var/lib/mysql/cloud",
+  }
+  exec {"cloud-setup-management":
+    creates => "/var/run/cloud-management.pid",
+  }
+
 
 }
 
