@@ -78,8 +78,9 @@ class cloudstack {
   exec {"cloud-setup-management":
     creates => "/var/run/cloud-management.pid",
   }
-
-
+  service { "cloud-management":
+    ensure => running,
+  }
 }
 
 class cloudstack::agent {
