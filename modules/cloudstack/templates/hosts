@@ -1,1 +1,1 @@
-@ipaddress	<%= fqdn %>	<%= hostname %>	localhost.localdomain	localhost
+<%= @ipaddress %>	<%= fqdn %>	<%= hostname %>	localhost.localdomain	localhost
