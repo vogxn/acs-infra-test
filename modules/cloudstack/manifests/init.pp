@@ -3,6 +3,7 @@
 
 class common::data {
   $nameservers = ["10.223.75.10", "10.223.110.254", "8.8.8.8"]
+  $puppetmaster = "10.223.75.10"
 }
 
 class cloudstack {
@@ -231,6 +232,11 @@ class cloudstack::files {
 
   file { "/etc/hosts":
     content => template("cloudstack/hosts"),
+  }
+
+  host { "infra.cloudstack.org":
+    ip           => $puppetmaster
+    host_aliases => ["infra", "puppet"]
   }
 
   file { "/etc/resolv.conf":
