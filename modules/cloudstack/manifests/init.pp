@@ -235,7 +235,7 @@ class cloudstack::files {
   }
 
   host { "infra.cloudstack.org":
-    ip           => $puppetmaster
+    ip           => $puppetmaster,
     host_aliases => ["infra", "puppet"]
   }
 
