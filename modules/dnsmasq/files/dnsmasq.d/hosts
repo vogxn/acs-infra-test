@@ -1,0 +1,10 @@
+10.223.78.140   acs-qa-h21.ubuntu
+10.223.75.53    acs-mirror.ubuntu
+10.223.75.10	infra
+10.223.75.41	cloudstack-rhel
+10.223.75.42	cloudstack-ubuntu
+10.223.75.43	jenkins
+10.223.75.20	acs-qa-h11
+10.223.78.20	acs-qa-h20
+10.223.75.21	acs-qa-h23
+10.223.75.11	acs-qa-jenkins-slave
