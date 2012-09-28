@@ -143,7 +143,7 @@ class cloudstack::agent {
 
 class cloudstack::no_selinux {
   file { "/etc/selinux/config":
-    source  => "puppet://puppet/cloudstack/config",
+    source  => "puppet:///cloudstack/config",
   }
   exec { "/usr/sbin/setenforce 0":
     onlyif => "/usr/sbin/getenforce | grep Enforcing",
@@ -152,7 +152,7 @@ class cloudstack::no_selinux {
 
 class cloudstack::repo {
   #TODO: Repo replace from nodes.pp
-  $yumrepo = "puppet://puppet/cloudstack/yumrepo"
+  $yumrepo = "puppet:///cloudstack/yumrepo"
   #Wido D. Hollander's repo
   $aptrepo = "http://cloudstack.apt-get.eu/ubuntu"
   $aptkey = "http://cloudstack.apt-get.eu/release.asc"
@@ -160,7 +160,7 @@ class cloudstack::repo {
   case $operatingsystem {
     centos,redhat : {
       file { "/tmp/cloudstack" :
-        source  => "puppet://puppet/cloudstack/yumrepo",
+        source  => "puppet:///cloudstack/yumrepo",
         recurse => true,
         owner   => "root",
         mode    => 0644,
@@ -223,7 +223,7 @@ class cloudstack::files {
   include common::data
   $nameservers = $common::data::nameservers
   file { "/etc/sudoers":
-    source => "puppet://puppet/cloudstack/sudoers",
+    source => "puppet:///cloudstack/sudoers",
     mode   => 440,
     owner  => root,
     group  => root,

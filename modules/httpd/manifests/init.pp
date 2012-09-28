@@ -36,7 +36,7 @@ class httpd {
 
 #                mode    => 644,
 
-#                source  => "puppet://puppet/httpd/httpd.conf",
+#                source  => "puppet:///httpd/httpd.conf",
 #        }
 
 ##############################################################

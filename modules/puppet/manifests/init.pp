@@ -11,7 +11,7 @@ class puppet {
   }
 
   file {"/etc/puppet/puppet.conf":
-    source => "puppet://puppet/puppet/puppet.conf",
+    source => "puppet:///puppet/puppet.conf",
     owner => root,
     group => root,
     mode => 644,

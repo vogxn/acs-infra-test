@@ -30,7 +30,7 @@ class ssh {
     mode   => 600,
     owner  => root,
     group  => root,
-    source => "puppet://puppet/ssh/sshd_config",
+    source => "puppet:///ssh/sshd_config",
   }
 
   file { banner:
@@ -38,7 +38,7 @@ class ssh {
     mode   => 444,
     owner  => root,
     group  => root,
-    source => "puppet://puppet/ssh/banner",
+    source => "puppet:///ssh/banner",
   }
 
   file { authorized_keys:
@@ -50,7 +50,7 @@ class ssh {
     selrole  => object_r,
     seltype  => home_ssh_t,
     seluser  => system_u,
-    source   => [ "puppet://puppet/ssh/authorized_keys.$hostname", "puppet://puppet/ssh/authorized_keys", ],
+    source   => [ "puppet:///ssh/authorized_keys.$hostname", "puppet:///ssh/authorized_keys", ],
     require  => File["/root/.ssh"]
   }
 
