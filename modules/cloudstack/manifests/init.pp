@@ -248,9 +248,6 @@ class cloudstack::files {
     file { "/etc/sysconfig/network":
       content => template("cloudstack/network"),
     }
-    file { "/etc/sysconfig/network-scripts/ifcfg-eth0":
-      content => template("cloudstack/ifcfg-eth0"),
-    }
     }
     default: {}
   }
