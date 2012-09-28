@@ -1,30 +1,27 @@
 #Apache CloudStack - infrastructure and nodes
 
-node 'learn' {
-  #  include cloudstack
+
+node cloudstack-rhel inherits basenode {
   include mysql
-  include ntp
-  include ssh
-  include dhcpd
-  include puppet
-}
-
-node 'puppet' {
-	include puppet::master
-  include ntp
-        
-}
-
-node 'marvin' inherits basenode {
-    include marvin
-}
-
-node 'cs-mgmt' inherits basenode {
   include cloudstack
-  include mysql
-  include nfs
+  include ntp
 }
 
-node 'jenkins' inherits basenode {
+node cloudstack-ubuntu inherits basenode {
+  include mysql
+  include cloudstack
+  include ntp
+}
+
+node jenkins inherits basenode {
+  include mysql
   include jenkins
 }
+
+node marvin inherits basenode {
+  include mysql
+  include ssh
+  include marvin
+}
+
+
