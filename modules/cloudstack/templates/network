@@ -1,3 +1,2 @@
 NETWORKING=yes
 HOSTNAME=<%= fqdn %>
-

@@ -2,7 +2,7 @@
 #
 
 class common::data {
-  $nameservers = ["10.223.110.254", "8.8.8.8"]
+  $nameservers = ["10.223.75.10", "10.223.110.254", "8.8.8.8"]
 }
 
 class cloudstack {
