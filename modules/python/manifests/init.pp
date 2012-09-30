@@ -19,6 +19,29 @@ define setuptoolsinstall($egg, $prefix, $version) {
   }
 }
 
+define sourceinstall($tarball, $prefix, $vers) {
+  exec { "python-fetch":
+    cwd     => "/tmp/",
+    command => "wget $tarball",
+  }
+  exec { "python-extract":
+    require => Exec["python-fetch"],
+    cwd => "/tmp",
+    command => "tar xjf /tmp/Python-$vers.tar.bz2",
+    creates => "/tmp/Python-$vers",
+  }
+  $altpacks = ["make", "gcc", "sqlite", "sqlite-devel", "readline", "readline-devel", "bzip2", "bzip2-devel"]
+  package { $altpacks:
+    ensure => installed,
+  }
+  exec { "python-source":
+    require => Exec["python-extract"],
+    cwd     => "/tmp",
+    command => "./configure; make; make altinstall",
+    creates => "/usr/local/lib/python-$vers",
+  }
+}
+
 define pipinstall($version, $bin) {
   exec { "pipinstall-exec-$version":
     require => [
@@ -70,8 +93,8 @@ class python::python_2_7_2 {
   $version = "2.7.2"
   sourceinstall { "Python-$version":
     tarball => "http://python.org/ftp/python/$version/Python-$version.tar.bz2",
-    prefix => "/opt/Python-$version",
-    flags => "",
+    prefix  => "/opt/Python-$version",
+    vers   => $version,
   }
   setuptoolsinstall { "setuptoolsinstall-$version":
     egg => "http://pypi.python.org/packages/2.6/s/setuptools/setuptools-0.6c9-py2.6.egg",
