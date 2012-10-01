@@ -96,11 +96,12 @@ class cloudstack::agent {
 
   case $operatingsystem {
     centos,redhat : {
-      $packagelist =  [ "jakarta-commons-collections", "cloud-agent" ]
+      $packagelist =  [ "cloud-agent" ]
       package { $packagelist:
          ensure  => installed,
          require => Yumrepo["cstemp"],
       }
+
     }
     ubuntu, debian: {
       $packagelist =  [ "cloud-agent" ]
