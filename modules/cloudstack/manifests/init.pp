@@ -244,6 +244,11 @@ class cloudstack::files {
     content => template("cloudstack/resolv.conf"),
   }
 
+  file { "redeploy.sh":
+    source => "puppet:///cloudstack/redeploy.sh",
+    mode   => 744,
+  }
+
   case $operatingsystem {
     redhat,centos: { 
     file { "/etc/sysconfig/network":
