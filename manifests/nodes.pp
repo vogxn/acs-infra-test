@@ -1,5 +1,25 @@
 #Apache CloudStack - infrastructure and nodes
 
+node acs-qa-h20 inherits basenode {
+  include ssh
+  include cloudstack::agent
+}
+
+node acs-qa-h11 inherits basenode {
+  include ssh
+  include cloudstack::agent
+}
+
+node acs-qa-h23 inherits basenode {
+  include ssh
+  include cloudstack::agent
+}
+
+node acs-qa-h21 inherits basenode {
+  include ssh
+  include cloudstack::agent
+}
+
 
 node cloudstack-rhel inherits basenode {
   include mysql
