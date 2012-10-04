@@ -227,6 +227,7 @@ class cloudstack::files {
   file { "redeploy.sh":
     source => "puppet:///cloudstack/redeploy.sh",
     mode   => 744,
+    cwd    => '/root',
   }
 
   case $operatingsystem {
