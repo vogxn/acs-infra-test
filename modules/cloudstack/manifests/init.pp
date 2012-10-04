@@ -26,29 +26,9 @@ class cloudstack {
       ensure => installed,
   }
   
-  #For mounting the secondary and ISO 
-  package { "nfs-utils":
-    name     => $operatingsystem ? {
-      centos => "nfs-utils",
-      redhat => "nfs-utils",
-      debian => ["nfs-common", "nfs-kernel-server"],
-      ubuntu => ["nfs-common", "nfs-kernel-server"]
-    },
-    ensure => installed,
-  }
-
   #Needed for systemvm.iso
   package { "genisoimage":
     ensure => installed,
-  }
-
-  service { "nfs":
-    name      => $operatingsystem? {
-      ubuntu  => "nfs-kernel-server",
-      default => "nfs"
-    },
-    ensure  => running,
-    require => Package["nfs-utils"],
   }
 
   case $operatingsystem {
