@@ -3,12 +3,14 @@
 
 node cloudstack-rhel inherits basenode {
   include mysql
+  include nfsclient
   include cloudstack
   include ntp
 }
 
 node cloudstack-ubuntu inherits basenode {
   include mysql
+  include nfsclient
   include cloudstack
   include ntp
 }
@@ -23,5 +25,3 @@ node marvin inherits basenode {
   include ssh
   include marvin
 }
-
-
