@@ -42,15 +42,15 @@ class httpd {
 ##############################################################
 # IPTables
 ##############################################################
-        iptables { "http":
-                proto   => "tcp",
-                dport   => "80",
-                jump    => "ACCEPT",
+        firewall { "http":
+                proto  => "tcp",
+                dport  => "80",
+                action => "ACCEPT",
         }
-        iptables { "https":
-                proto   => "tcp",
-                dport   => "443",
-                jump    => "ACCEPT",
+        firewall { "https":
+                proto  => "tcp",
+                dport  => "443",
+                action => "ACCEPT",
         }
 
 

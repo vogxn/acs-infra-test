@@ -176,28 +176,28 @@ class cloudstack::repo {
 }
 
 class cloudstack::ports {
-  iptables { "apiport":
-    proto => "tcp",
-    dport => [8096, 8080, 9090],
-    jump  => "ACCEPT",
+  firewall { "apiport":
+    proto  => "tcp",
+    dport  => [8096, 8080, 9090],
+    action => "ACCEPT",
   }
 
-  iptables { "mysqlport":
-    proto => "tcp",
-    dport => 3306,
-    jump  => "ACCEPT",
+  firewall { "mysqlport":
+    proto  => "tcp",
+    dport  => 3306,
+    action => "ACCEPT",
   }
 
-  iptables { "nfsudp":
-    proto => "udp",
-    dport => 2049,
-    jump  => "ACCEPT",
+  firewall { "nfsudp":
+    proto  => "udp",
+    dport  => 2049,
+    action => "ACCEPT",
   }
 
-  iptables { "nfstcp":
-    proto => "tcp",
-    dport => 2049,
-    jump  => "ACCEPT",
+  firewall { "nfstcp":
+    proto  => "tcp",
+    dport  => 2049,
+    action => "ACCEPT",
   }
 }
 

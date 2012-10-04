@@ -65,9 +65,9 @@ class ssh {
     seluser  => system_u,
   }
 
-  iptables { "ssh":
+  firewall { "ssh":
     proto   => "tcp",
     dport   => "22",
-    jump  => "ACCEPT",
+    action  => "ACCEPT",
   }
 }

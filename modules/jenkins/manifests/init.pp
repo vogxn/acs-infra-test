@@ -24,10 +24,10 @@ class jenkins {
     ensure    => true,
   }
 
-  iptables { 'http80':
-    proto => 'tcp',
-    dport => '80',
-    jump  => 'ACCEPT',
+  firewall { 'http80':
+    proto  => 'tcp',
+    dport  => '80',
+    action => 'ACCEPT',
   }
 
   firewall { 'http8080':
