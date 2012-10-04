@@ -6,6 +6,10 @@ class base {
     vim-enhanced: ensure => latest
   }
 
+  service { "iptables":
+    ensure => running,
+  }
+
   firewall { '000 allow packets with valid state':
     state  => ['RELATED', 'ESTABLISHED'],
     action => 'accept',
