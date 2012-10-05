@@ -55,6 +55,10 @@ class cloudstack {
     }
   }
 
+  exec {"/root/secseeder.sh":
+    require => Class[cloudstack::files]
+  }
+
   exec {"cloud-setup-databases cloud:cloud@localhost --deploy-as=root":
     creates => "/var/lib/mysql/cloud",
   }
@@ -234,6 +238,11 @@ class cloudstack::files {
 
   file { "/root/redeploy.sh":
     source  => "puppet:///cloudstack/redeploy.sh",
+    mode    => 744,
+  }
+
+  file { "/root/secseeder.sh":
+    source  => "puppet:///cloudstack/secseeder.sh",
     mode    => 744,
   }
 
