@@ -177,27 +177,31 @@ class cloudstack::repo {
 
 class cloudstack::ports {
   firewall { "apiport":
-    proto  => "tcp",
-    dport  => [8096, 8080, 9090],
-    action => "ACCEPT",
+    proto     => "tcp",
+    dport     => [8096, 8080, 9090],
+    action    => "ACCEPT",
+    subscribe => Service["cloud-management"]
   }
 
   firewall { "mysqlport":
     proto  => "tcp",
     dport  => 3306,
     action => "ACCEPT",
+    subscribe => Service["cloud-management"]
   }
 
   firewall { "nfsudp":
     proto  => "udp",
     dport  => 2049,
     action => "ACCEPT",
+    subscribe => Service["cloud-management"]
   }
 
   firewall { "nfstcp":
     proto  => "tcp",
     dport  => 2049,
     action => "ACCEPT",
+    subscribe => Service["cloud-management"]
   }
 }
 
