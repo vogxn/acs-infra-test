@@ -24,17 +24,17 @@ class jenkins {
     ensure    => true,
   }
 
-  firewall { 'http80':
+  firewall { '112 http80':
     proto  => 'tcp',
     dport  => '80',
-    action => 'ACCEPT',
+    action => accept,
   }
 
-  firewall { 'http8080':
+  firewall { '113 http8080':
     ensure => absent,
     proto  => 'tcp',
     dport  => '8080',
-    action => 'ACCEPT',
+    action => accept,
   }
 
   users::priv_user { 'edison': }

@@ -65,9 +65,9 @@ class ssh {
     seluser  => system_u,
   }
 
-  firewall { "ssh":
+  firewall { "012 ssh":
     proto   => "tcp",
     dport   => "22",
-    action  => "ACCEPT",
+    action  => accept,
   }
 }
