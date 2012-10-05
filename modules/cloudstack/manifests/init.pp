@@ -176,11 +176,6 @@ class cloudstack::repo {
 }
 
 class cloudstack::ports {
-  service { "iptables":
-    ensure    => running,
-    hasstatus => true,
-  }
-
   firewall { "apiport":
     proto  => "tcp",
     dport  => [8096, 8080, 9090],
