@@ -181,7 +181,6 @@ class cloudstack::ports {
     dport     => [8096, 8080, 9090],
     action    => accept,
     subscribe => Service["iptables"],
-    subscribe => Service["cloud-management"]
   }
 
   firewall { "001 mysqlport":
@@ -189,7 +188,6 @@ class cloudstack::ports {
     dport  => 3306,
     action => accept,
     subscribe => Service["iptables"],
-    subscribe => Service["cloud-management"]
   }
 
   firewall { "002 nfsudp":
@@ -197,7 +195,6 @@ class cloudstack::ports {
     dport  => 2049,
     action => accept,
     subscribe => Service["iptables"],
-    subscribe => Service["cloud-management"]
   }
 
   firewall { "004 nfstcp":
@@ -205,7 +202,6 @@ class cloudstack::ports {
     dport  => 2049,
     action => accept,
     subscribe => Service["iptables"],
-    subscribe => Service["cloud-management"]
   }
 }
 
