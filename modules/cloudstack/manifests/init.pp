@@ -37,6 +37,7 @@ class cloudstack {
       package { $packagelist:
          ensure  => installed,
          require => Yumrepo["cstemp"],
+         before  => Exec["cloud-setup-management"],
       }
       file { "/etc/yum.repos.d/cstemp.repo":
         ensure => absent,
@@ -47,6 +48,7 @@ class cloudstack {
       package { $packagelist:
          ensure  => latest,
          require => File["/etc/apt/sources.list.d/cloudstack.list"],
+         before  => Exec["cloud-setup-management"],
       }
     }
     fedora : {
@@ -80,6 +82,7 @@ class cloudstack::agent {
       package { $packagelist:
          ensure  => installed,
          require => Yumrepo["cstemp"],
+         before  => Exec["cloud-setup-agent"],
       }
 
     }
@@ -88,6 +91,7 @@ class cloudstack::agent {
       package { $packagelist:
          ensure  => latest,
          require => [File["/etc/apt/sources.list.d/cloudstack.list"], Exec["apt-get update"]],
+         before  => Exec["cloud-setup-agent"],
       }
     }
     fedora : {
@@ -229,8 +233,8 @@ class cloudstack::files {
   }
 
   file { "/root/redeploy.sh":
-    source => "puppet:///cloudstack/redeploy.sh",
-    mode   => 744,
+    source  => "puppet:///cloudstack/redeploy.sh",
+    mode    => 744,
   }
 
   case $operatingsystem {
