@@ -1,13 +1,17 @@
 class base {
-  package {
-    screen: ensure => latest 
+  package { screen:
+    ensure => latest 
   }
-  package {
-    vim-enhanced: ensure => latest
+  package { vim-enhanced:
+    ensure => latest,
+  }
+  package { iptables:
+    ensure => latest,
   }
 
   service { "iptables":
-    ensure => running,
+    ensure  => running,
+    require => Package["iptables"],
   }
 
   firewall { '000 allow packets with valid state':
