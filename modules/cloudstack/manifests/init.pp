@@ -76,7 +76,6 @@ class cloudstack::agent {
     redhat: { include cloudstack::no_selinux }
   }
   include cloudstack::repo
-  include cloudstack::ports
   include cloudstack::files
   include common::data
 
@@ -86,16 +85,13 @@ class cloudstack::agent {
       package { $packagelist:
          ensure  => installed,
          require => Yumrepo["cstemp"],
-         before  => Exec["cloud-setup-agent"],
       }
-
     }
     ubuntu, debian: {
       $packagelist =  [ "cloud-agent" ]
       package { $packagelist:
          ensure  => latest,
          require => [File["/etc/apt/sources.list.d/cloudstack.list"], Exec["apt-get update"]],
-         before  => Exec["cloud-setup-agent"],
       }
     }
     fedora : {
