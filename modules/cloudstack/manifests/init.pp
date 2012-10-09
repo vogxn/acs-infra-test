@@ -102,24 +102,6 @@ class cloudstack::agent {
     }
   }
 
-  exec { "cloud-setup-agent":
-    creates  => "/var/log/cloud/setupAgent.log",
-    require => [ Package[cloud-agent],
-    Package[NetworkManager],
-    File["/etc/sudoers"],
-    File["/etc/cloud/agent/agent.properties"],
-    File["/etc/hosts"],
-    File["/etc/resolv.conf"],
-    Service["network"], ]
-  }
-
-  file { "/etc/cloud/agent/agent.properties":
-    ensure   => present,
-    require => Package[cloud-agent],
-    content  => template("cloudstack/agent.properties")
-  }
-
-
   service { network:
     ensure    => running,
     hasstatus => true, 
