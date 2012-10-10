@@ -201,6 +201,13 @@ class cloudstack::files {
     group  => root,
   }
 
+  file { "/usr/share/cloud/templates.sql":
+    source => "puppet:///cloudstack/templates.sql",
+    mode   => 644,
+    owner  => root,
+    group  => root,
+  }
+
   file { "/etc/hosts":
     content => template("cloudstack/hosts"),
   }
