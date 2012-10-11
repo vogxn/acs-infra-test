@@ -35,7 +35,7 @@ node cloudstack-ubuntu inherits basenode {
   include ntp
 }
 
-node jenkins inherits basenode {
+node jenkins-internal inherits basenode {
   include mysql
   include jenkins
 }
