@@ -31,7 +31,6 @@ class jenkins {
   }
 
   firewall { '113 http8080':
-    ensure => absent,
     proto  => 'tcp',
     dport  => '8080',
     action => accept,
