@@ -206,6 +206,7 @@ class cloudstack::files {
     mode    => 644,
     owner   => root,
     group   => root,
+    onlyif  => "test -f /usr/bin/cloud-setup-management",
     require => Exec["cloud-setup-management"],
   }
 
