@@ -16,7 +16,7 @@ define users::priv_user {
                   group   => $title,
                   mode    => 600,
                   require => File["/home/$title/.ssh"],
-                  source => "puppet://puppet/users/$title.ssh",
+                  source => "puppet:///users/$title.ssh",
   }
 
   file { "/home/$title/.ssh":
