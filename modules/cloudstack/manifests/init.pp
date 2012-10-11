@@ -31,6 +31,14 @@ class cloudstack {
     ensure => installed,
   }
 
+  file { "/usr/share/cloud/setup/templates.sql":
+    source  => "puppet:///cloudstack/templates.sql",
+    mode    => 644,
+    owner   => root,
+    group   => root,
+    require => Exec["cloud-setup-management"],
+  }
+
   case $operatingsystem {
     centos,redhat : {
       $packagelist =  [ "cloud-server", "cloud-client"]
@@ -199,15 +207,6 @@ class cloudstack::files {
     mode   => 440,
     owner  => root,
     group  => root,
-  }
-
-  file { "/usr/share/cloud/setup/templates.sql":
-    source  => "puppet:///cloudstack/templates.sql",
-    mode    => 644,
-    owner   => root,
-    group   => root,
-    onlyif  => "test -f /usr/bin/cloud-setup-management",
-    require => Exec["cloud-setup-management"],
   }
 
   file { "/etc/hosts":
