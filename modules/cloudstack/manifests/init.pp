@@ -116,8 +116,8 @@ class cloudstack::agent {
 
   service { network:
     ensure    => running,
-    hasstatus => true, 
-    require  => Package['cloud-agent'],
+    hasstatus => true,
+    require   => Package['cloud-agent'],
   }
 
   package { NetworkManager:
