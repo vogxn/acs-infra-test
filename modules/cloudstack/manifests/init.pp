@@ -31,12 +31,25 @@ class cloudstack {
     ensure => installed,
   }
 
+  exec {'/root/secseeder.sh':
+    require => Class[cloudstack::files]
+  }
+  
   file { '/usr/share/cloud/setup/templates.sql':
     source => 'puppet:///cloudstack/templates.sql',
     mode   => 644,
     owner  => root,
     group  => root,
     before => Exec['cloud-setup-databases']
+  }
+
+  exec {'cloud-setup-databases cloud:cloud@localhost --deploy-as=root':
+    creates => '/var/lib/mysql/cloud',
+    before  => Exec['cloud-setup-management'],
+  }
+  exec {'cloud-setup-management':
+    creates => '/var/run/cloud-management.pid',
+    before  => Service['cloud-management'],
   }
 
   case $operatingsystem {
@@ -61,19 +74,6 @@ class cloudstack {
     }
     fedora : {
     }
-  }
-
-  exec {'/root/secseeder.sh':
-    require => Class[cloudstack::files]
-  }
-
-  exec {'cloud-setup-databases cloud:cloud@localhost --deploy-as=root':
-    creates => '/var/lib/mysql/cloud',
-    before  => Exec['cloud-setup-management'],
-  }
-  exec {'cloud-setup-management':
-    creates => '/var/run/cloud-management.pid',
-    before  => Service['cloud-management'],
   }
 
   service { 'cloud-management':
