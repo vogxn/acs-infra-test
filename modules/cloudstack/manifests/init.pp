@@ -211,7 +211,6 @@ class cloudstack::ports {
 class cloudstack::files {
   include common::data
   $nameservers = $common::data::nameservers
-  $puppetmaster = $common::data::puppetmaster
   file { '/etc/sudoers':
     source => 'puppet:///cloudstack/sudoers',
     mode   => 440,
@@ -221,11 +220,6 @@ class cloudstack::files {
 
   file { '/etc/hosts':
     content => template('cloudstack/hosts'),
-  }
-
-  host { 'infra.cloudstack.org':
-    ip           => $puppetmaster,
-    host_aliases => ['infra', 'puppet']
   }
 
   file { '/etc/resolv.conf':
