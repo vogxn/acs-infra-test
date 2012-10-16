@@ -180,7 +180,7 @@ class cloudstack::repo {
 class cloudstack::ports {
   firewall { '000 apiport':
     proto     => 'tcp',
-    dport     => [8096, 8080, 9090],
+    dport     => [8096, 8080, 9090, 8250],
     action    => accept,
     subscribe => Service['cloud-management'],
   }
