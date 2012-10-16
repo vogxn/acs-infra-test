@@ -13,10 +13,6 @@ class base {
     ensure  => running,
   }
 
-  Firewall {
-    require => undef,
-  }
-
   firewall { '000 allow packets with valid state':
     state  => ['RELATED', 'ESTABLISHED'],
     action => accept,
