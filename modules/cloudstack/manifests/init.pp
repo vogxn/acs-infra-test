@@ -32,11 +32,11 @@ class cloudstack {
   }
 
   file { '/usr/share/cloud/setup/templates.sql':
-    source  => 'puppet:///cloudstack/templates.sql',
-    mode    => 644,
-    owner   => root,
-    group   => root,
-    require => Exec['cloud-setup-management'],
+    source => 'puppet:///cloudstack/templates.sql',
+    mode   => 644,
+    owner  => root,
+    group  => root,
+    before => Exec['cloud-setup-databases']
   }
 
   case $operatingsystem {
@@ -45,7 +45,7 @@ class cloudstack {
       package { $packagelist:
          ensure  => installed,
          require => Yumrepo['cstemp'],
-         before  => Exec['cloud-setup-management'],
+         before  => Exec['cloud-setup-databases'],
       }
       file { '/etc/yum.repos.d/cstemp.repo':
         ensure => absent,
@@ -56,7 +56,7 @@ class cloudstack {
       package { $packagelist:
          ensure  => latest,
          require => File['/etc/apt/sources.list.d/cloudstack.list'],
-         before  => Exec['cloud-setup-management'],
+         before  => Exec['cloud-setup-databases'],
       }
     }
     fedora : {
@@ -69,9 +69,11 @@ class cloudstack {
 
   exec {'cloud-setup-databases cloud:cloud@localhost --deploy-as=root':
     creates => '/var/lib/mysql/cloud',
+    before  => Exec['cloud-setup-management'],
   }
   exec {'cloud-setup-management':
     creates => '/var/run/cloud-management.pid',
+    before  => Service['cloud-management'],
   }
 
   service { 'cloud-management':
@@ -83,7 +85,6 @@ class cloudstack {
     target  => '/var/log/cloud/management/management-server.log',
     require => Service['cloud-management'],
   }
-
 }
 
 class cloudstack::agent {
@@ -117,17 +118,18 @@ class cloudstack::agent {
   service { network:
     ensure    => running,
     hasstatus => true, 
-    require  => Package[NetworkManager]
+    requires  => Package['cloud-agent'],
   }
 
   package { NetworkManager:
     ensure => absent,
+    before => Service['network'],
   }
 }
 
 class cloudstack::no_selinux {
   file { '/etc/selinux/config':
-    source  => 'puppet:///cloudstack/config',
+    source => 'puppet:///cloudstack/config',
   }
   exec { '/usr/sbin/setenforce 0':
     onlyif => '/usr/sbin/getenforce | grep Enforcing',
