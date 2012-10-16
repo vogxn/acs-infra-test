@@ -13,9 +13,10 @@ class {
   'common::data': stage      => 'preop';
   'cloudstack::repo': stage  => 'preop';
   'cloudstack::files': stage => 'preop';
+  'mysql' : stage            => 'preop';
+  'cloudstack::ports': stage => 'preop';
   'cloudstack': stage        => 'main';
   'cloudstack::agent': stage => 'main';
-  'cloudstack::ports': stage => 'postop';
 }
 
 class common::data {
@@ -53,11 +54,11 @@ class cloudstack {
   }
   
   file { '/usr/share/cloud/setup/templates.sql':
-    source  => 'puppet:///cloudstack/templates.sql',
-    mode    => 644,
-    owner   => root,
-    group   => root,
-    require => Exec['cloud-setup-databases']
+    source => 'puppet:///cloudstack/templates.sql',
+    mode   => 644,
+    owner  => root,
+    group  => root,
+    before => Exec['cloud-setup-databases cloud:cloud@localhost --deploy-as=root'],
   }
 
   exec {'cloud-setup-databases cloud:cloud@localhost --deploy-as=root':
@@ -200,28 +201,24 @@ class cloudstack::ports {
     proto     => 'tcp',
     dport     => [8096, 8080, 9090, 8250],
     action    => accept,
-    subscribe => Service['cloud-management'],
   }
 
   firewall { '001 mysqlport':
     proto  => 'tcp',
     dport  => 3306,
     action => accept,
-    subscribe => Service['cloud-management'],
   }
 
   firewall { '002 nfsudp':
     proto  => 'udp',
     dport  => 2049,
     action => accept,
-    subscribe => Service['cloud-management'],
   }
 
   firewall { '004 nfstcp':
     proto  => 'tcp',
     dport  => 2049,
     action => accept,
-    subscribe => Service['cloud-management'],
   }
 }
 
