@@ -44,8 +44,9 @@ class cloudstack {
   }
 
   exec {'cloud-setup-databases cloud:cloud@localhost --deploy-as=root':
-    creates => '/var/lib/mysql/cloud',
-    before  => Exec['cloud-setup-management'],
+    creates  => '/var/lib/mysql/cloud',
+    requires => [Package['cloud-client'], Package['cloud-server']],
+    before   => Exec['cloud-setup-management'],
   }
   exec {'cloud-setup-management':
     creates => '/var/run/cloud-management.pid',
@@ -58,7 +59,6 @@ class cloudstack {
       package { $packagelist:
          ensure  => installed,
          require => Yumrepo['cstemp'],
-         before  => Exec['cloud-setup-databases'],
       }
       file { '/etc/yum.repos.d/cstemp.repo':
         ensure => absent,
@@ -69,7 +69,6 @@ class cloudstack {
       package { $packagelist:
          ensure  => latest,
          require => File['/etc/apt/sources.list.d/cloudstack.list'],
-         before  => Exec['cloud-setup-databases'],
       }
     }
     fedora : {
