@@ -207,7 +207,7 @@ class cloudstack::ports {
 class cloudstack::files {
   include common::data
   $nameservers = $common::data::nameservers
-  $nameservers = $common::data::puppetmaster
+  $puppetmaster = $common::data::puppetmaster
   file { '/etc/sudoers':
     source => 'puppet:///cloudstack/sudoers',
     mode   => 440,
