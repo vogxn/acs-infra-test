@@ -114,6 +114,10 @@ class cloudstack::agent {
     }
   }
 
+  exec {'sed -i '/NM_CONTROLLED=/d' /etc/sysconfig/network-scripts/ifcfg-*':
+    notify => Service['network'],
+  }
+
   service { network:
     ensure    => running,
     hasstatus => true,
