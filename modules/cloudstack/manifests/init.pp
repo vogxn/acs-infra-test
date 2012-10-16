@@ -1,23 +1,6 @@
 #Apache Cloudstack - Module for the Management Server and Agent
 #
 
-stage { 'preop':
-  before => Stage['main'],
-}
-
-stage { 'postop':
-  require => Stage['main'],
-}
-
-class {
-  'cloudstack::repo': stage  => 'preop';
-  'cloudstack::files': stage => 'preop';
-  'mysql' : stage            => 'preop';
-  'cloudstack::ports': stage => 'preop';
-  'cloudstack': stage        => 'main';
-  'cloudstack::agent': stage => 'main';
-}
-
 class common::data {
   $nameservers = ['10.223.75.10', '10.223.110.254', '8.8.8.8']
   $puppetmaster = '10.223.75.10'
@@ -48,7 +31,7 @@ class cloudstack {
     ensure => installed,
   }
 
-  exec {'/root/secseeder.sh':
+  exec {'/bin/bash /root/secseeder.sh':
     require => Class[cloudstack::files]
   }
   
@@ -224,6 +207,7 @@ class cloudstack::ports {
 class cloudstack::files {
   include common::data
   $nameservers = $common::data::nameservers
+  $nameservers = $common::data::puppetmaster
   file { '/etc/sudoers':
     source => 'puppet:///cloudstack/sudoers',
     mode   => 440,
