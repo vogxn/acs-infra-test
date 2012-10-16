@@ -73,9 +73,17 @@ class cloudstack {
   exec {'cloud-setup-management':
     creates => '/var/run/cloud-management.pid',
   }
+
   service { 'cloud-management':
     ensure => running,
   }
+
+  file { '/root/mslog':
+    ensure  => link,
+    target  => '/var/log/cloud/management/management-server.log',
+    require => Service['cloud-setup-management'],
+  }
+
 }
 
 class cloudstack::agent {
