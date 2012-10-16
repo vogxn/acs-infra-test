@@ -1,6 +1,23 @@
 #Apache Cloudstack - Module for the Management Server and Agent
 #
 
+stage { 'preop':
+  before => Stage['main'],
+}
+
+stage { 'postop':
+  require => Stage['main'],
+}
+
+class {
+  'common::data': stage      => 'preop';
+  'cloudstack::repo': stage  => 'preop';
+  'cloudstack::files': stage => 'preop';
+  'cloudstack': stage        => 'main';
+  'cloudstack::agent': stage => 'main';
+  'cloudstack::ports': stage => 'postop';
+}
+
 class common::data {
   $nameservers = ['10.223.75.10', '10.223.110.254', '8.8.8.8']
   $puppetmaster = '10.223.75.10'
@@ -36,11 +53,11 @@ class cloudstack {
   }
   
   file { '/usr/share/cloud/setup/templates.sql':
-    source => 'puppet:///cloudstack/templates.sql',
-    mode   => 644,
-    owner  => root,
-    group  => root,
-    before => Exec['cloud-setup-databases']
+    source  => 'puppet:///cloudstack/templates.sql',
+    mode    => 644,
+    owner   => root,
+    group   => root,
+    require => Exec['cloud-setup-databases']
   }
 
   exec {'cloud-setup-databases cloud:cloud@localhost --deploy-as=root':
