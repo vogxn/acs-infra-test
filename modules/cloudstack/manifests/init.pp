@@ -10,7 +10,6 @@ stage { 'postop':
 }
 
 class {
-  'common::data': stage      => 'preop';
   'cloudstack::repo': stage  => 'preop';
   'cloudstack::files': stage => 'preop';
   'mysql' : stage            => 'preop';
