@@ -45,7 +45,7 @@ class cloudstack {
 
   exec {'cloud-setup-databases cloud:cloud@localhost --deploy-as=root':
     creates  => '/var/lib/mysql/cloud',
-    requires => [Package['cloud-client'], Package['cloud-server']],
+    require => [Package['cloud-client'], Package['cloud-server']],
     before   => Exec['cloud-setup-management'],
   }
   exec {'cloud-setup-management':
@@ -117,7 +117,7 @@ class cloudstack::agent {
   service { network:
     ensure    => running,
     hasstatus => true, 
-    requires  => Package['cloud-agent'],
+    require  => Package['cloud-agent'],
   }
 
   package { NetworkManager:
