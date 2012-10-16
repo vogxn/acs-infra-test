@@ -81,7 +81,7 @@ class cloudstack {
   file { '/root/mslog':
     ensure  => link,
     target  => '/var/log/cloud/management/management-server.log',
-    require => Service['cloud-setup-management'],
+    require => Service['cloud-management'],
   }
 
 }
