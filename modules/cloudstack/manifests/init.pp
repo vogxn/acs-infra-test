@@ -115,20 +115,27 @@ class cloudstack::agent {
     }
   }
 
-  exec {"sed -i '/NM_CONTROLLED=/d' /etc/sysconfig/network-scripts/ifcfg-*":
-    notify => Service['network'],
-  }
-
-  service { network:
-    ensure    => running,
-    hasstatus => true,
-    require   => Package['cloud-agent'],
-  }
-
   package { NetworkManager:
     ensure => absent,
-    before => Service['network'],
   }
+
+  exec {'sed -i '/NM_CONTROLLED=/d' /etc/sysconfig/network-scripts/ifcfg-*':
+    notify => Notify['networkmanager']
+  }
+
+  notify { 'networkmanager':
+    message => 'NM_Controlled set to off'
+  }
+
+  #Cobbler will reboot host post-instalation
+  #No need to cause explicit network refresh
+#  service { network:
+#    ensure      => running,
+#    hasstatus   => true,
+#    hasrestart  => true,
+#    refreshonly => true,
+#  }
+
 }
 
 class cloudstack::no_selinux {

@@ -7,10 +7,14 @@ class base {
   }
   package { iptables:
     ensure => latest,
+    notify => Service['iptables'],
   }
 
-  service { "iptables":
-    ensure  => running,
+  service { 'iptables':
+    ensure      => running,
+    hasstatus   => true,
+    hasrestart  => true,
+    refreshonly => true,
   }
 
   firewall { '000 allow packets with valid state':
