@@ -1,4 +1,4 @@
-class fw_base::pre {
+class base::pre {
   Firewall {
     require => undef,
   }
