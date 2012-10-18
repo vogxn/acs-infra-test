@@ -15,5 +15,7 @@ class base {
     hasstatus   => true,
     hasrestart  => true,
   }
+  include base::pre
+  include base::post
 
 }
