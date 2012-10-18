@@ -36,7 +36,7 @@ exec { 'persist-firewall':
 Firewall {
   notify  => Exec['persist-firewall'],
   require => Class['fw_base:pre'],
-  require => Class['fw_base:post'],
+  before  => Class['fw_base:post'],
 }
 Firewallchain {
   notify  => Exec['persist-firewall'],
