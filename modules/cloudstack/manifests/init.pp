@@ -36,11 +36,12 @@ class cloudstack {
   }
   
   file { '/usr/share/cloud/setup/templates.sql':
-    source => 'puppet:///cloudstack/templates.sql',
-    mode   => 644,
-    owner  => root,
-    group  => root,
-    before => Exec['cloud-setup-databases cloud:cloud@localhost --deploy-as=root'],
+    source  => 'puppet:///cloudstack/templates.sql',
+    mode    => 644,
+    owner   => root,
+    group   => root,
+    before  => Exec['cloud-setup-databases cloud:cloud@localhost --deploy-as=root'],
+    require => [Package['cloud-client'], Package['cloud-server']],
   }
 
   exec {'cloud-setup-databases cloud:cloud@localhost --deploy-as=root':
