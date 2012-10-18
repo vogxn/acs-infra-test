@@ -119,8 +119,8 @@ class cloudstack::agent {
     ensure => absent,
   }
 
-  exec {'sed -i '/NM_CONTROLLED=/d' /etc/sysconfig/network-scripts/ifcfg-*':
-    notify => Notify['networkmanager']
+  exec {"sed -i '/NM_CONTROLLED=/d' /etc/sysconfig/network-scripts/ifcfg-*":
+    notify => Notify['networkmanager'],
   }
 
   notify { 'networkmanager':
