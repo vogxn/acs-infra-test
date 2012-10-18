@@ -35,7 +35,8 @@ exec { 'persist-firewall':
 # first puppet run.
 Firewall {
   notify  => Exec['persist-firewall'],
-  require => Class['base'],
+  require => Class['fw_base:pre'],
+  require => Class['fw_base:post'],
 }
 Firewallchain {
   notify  => Exec['persist-firewall'],
