@@ -14,7 +14,6 @@ class base {
     ensure      => running,
     hasstatus   => true,
     hasrestart  => true,
-    refreshonly => true,
   }
 
   firewall { '000 allow packets with valid state':
