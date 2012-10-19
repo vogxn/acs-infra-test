@@ -83,7 +83,22 @@ class cloudstack {
   file { '/root/mslog':
     ensure  => link,
     target  => '/var/log/cloud/management/management-server.log',
+    owner   => 'root',
+    mode    => 644,
     require => Service['cloud-management'],
+  }
+
+  file { '/var/log/cloud/management/management-server.log':
+    ensure  => present,
+    owner   => 'cloud',
+    mode    => 644,
+    require => Service['cloud-management']
+  }
+  file { '/var/log/cloud/management/api-server.log':
+    ensure  => present,
+    owner   => 'cloud',
+    mode    => 644,
+    require => Service['cloud-management']
   }
 }
 
