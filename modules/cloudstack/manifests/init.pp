@@ -33,6 +33,7 @@ class cloudstack {
 
   exec {'/bin/bash /root/secseeder.sh':
     require => Class[cloudstack::files]
+    timeout => 0,
   }
   
   file { '/usr/share/cloud/setup/templates.sql':
