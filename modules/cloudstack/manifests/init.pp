@@ -32,7 +32,7 @@ class cloudstack {
   }
 
   exec {'/bin/bash /root/secseeder.sh':
-    require => Class[cloudstack::files]
+    require => Class[cloudstack::files],
     timeout => 0,
   }
   
