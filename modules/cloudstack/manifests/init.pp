@@ -206,25 +206,40 @@ class cloudstack::repo {
 }
 
 class cloudstack::ports {
-  firewall { '010 apiport':
+  firewall { '010 integrationport':
     proto     => 'tcp',
-    dport     => [8096, 8080, 9090, 8250],
+    dport     => 8096,
+    action    => accept,
+  }
+  firewall { '011 apiport':
+    proto     => 'tcp',
+    dport     => 8080,
+    action    => accept,
+  }
+  firewall { '012 clusterport':
+    proto     => 'tcp',
+    dport     => 9090,
+    action    => accept,
+  }
+  firewall { '013 agentport':
+    proto     => 'tcp',
+    dport     => 8250,
     action    => accept,
   }
 
-  firewall { '011 mysqlport':
+  firewall { '014 mysqlport':
     proto  => 'tcp',
     dport  => 3306,
     action => accept,
   }
 
-  firewall { '012 nfsudp':
+  firewall { '015 nfsudp':
     proto  => 'udp',
     dport  => 2049,
     action => accept,
   }
 
-  firewall { '014 nfstcp':
+  firewall { '016 nfstcp':
     proto  => 'tcp',
     dport  => 2049,
     action => accept,
