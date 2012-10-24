@@ -138,7 +138,6 @@ class cloudstack::agent {
   }
 
   exec {"sed -i 's/\"dhcp\"/\"static\"/g' /etc/sysconfig/network-scripts/ifcfg-em*":
-    notify => Service["network"]
   }
 
   exec {"sed -i '/NM_CONTROLLED=/d' /etc/sysconfig/network-scripts/ifcfg-*":
