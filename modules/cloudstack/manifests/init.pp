@@ -156,7 +156,6 @@ class cloudstack::agent {
     hasstatus   => true,
     hasrestart  => true,
     refreshonly => true,
-    message     => "network restarted by config change",
   }
 }
 
