@@ -148,15 +148,6 @@ class cloudstack::agent {
   notify { 'networkmanager':
     message => 'NM_Controlled set to off'
   }
-
-  #Cobbler will reboot host post-instalation
-  #No need to cause explicit network refresh
-  service { network:
-    ensure      => running,
-    hasstatus   => true,
-    hasrestart  => true,
-    refreshonly => true,
-  }
 }
 
 class cloudstack::no_selinux {
