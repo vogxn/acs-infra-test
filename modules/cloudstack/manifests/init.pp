@@ -31,10 +31,10 @@ class cloudstack {
     ensure => installed,
   }
 
-  #  exec {'/bin/bash /root/secseeder.sh':
-  #  require => Class[cloudstack::files],
-  #  timeout => 0,
-  #}
+  exec {'/bin/bash /root/secseeder.sh':
+    require => Class[cloudstack::files],
+    timeout => 0,
+  }
   
   file { '/usr/share/cloud/setup/templates.sql':
     source  => 'puppet:///cloudstack/templates.sql',
@@ -137,6 +137,10 @@ class cloudstack::agent {
     ensure => absent,
   }
 
+  exec {"sed -i 's/\"dhcp\"/\"static\"/g' /etc/sysconfig/network-scripts/ifcfg-em*":
+    notify => Service["network"]
+  }
+
   exec {"sed -i '/NM_CONTROLLED=/d' /etc/sysconfig/network-scripts/ifcfg-*":
     notify => Notify['networkmanager'],
   }
@@ -147,13 +151,13 @@ class cloudstack::agent {
 
   #Cobbler will reboot host post-instalation
   #No need to cause explicit network refresh
-#  service { network:
-#    ensure      => running,
-#    hasstatus   => true,
-#    hasrestart  => true,
-#    refreshonly => true,
-#  }
-
+  service { network:
+    ensure      => running,
+    hasstatus   => true,
+    hasrestart  => true,
+    refreshonly => true,
+    message     => "network restarted by by config change",
+  }
 }
 
 class cloudstack::no_selinux {
