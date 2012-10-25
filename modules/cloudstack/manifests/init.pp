@@ -137,18 +137,25 @@ class cloudstack::agent {
     ensure => absent,
   }
 
-  #exec {"sed -i 's/IPADDR=@ipaddress_em1/IPADDR=@ipaddress_em1/g' /etc/sysconfig/network-scripts/ifcfg-em1":
-  #}
+  case $operatingsystem {
+    centos, redhat : {
+      exec {"/bin/echo 'IPADDR=$ipaddress_em1' >> /etc/sysconfig/network-scripts/ifcfg-em1":
+        path => "/etc/sysconfig/network-scripts/",
+      }
+      exec {"/bin/sed -i 's/\"dhcp\"/\"static\"/g' /etc/sysconfig/network-scripts/ifcfg-em*":
+      }
 
-  #  exec {"sed -i 's/\"dhcp\"/\"static\"/g' /etc/sysconfig/network-scripts/ifcfg-em*":
-  #}
+      exec {"/bin/sed -i '/NM_CONTROLLED=/d' /etc/sysconfig/network-scripts/ifcfg-*":
+        notify => Notify['networkmanager'],
+      }
 
-  exec {"sed -i '/NM_CONTROLLED=/d' /etc/sysconfig/network-scripts/ifcfg-*":
-    notify => Notify['networkmanager'],
-  }
-
-  notify { 'networkmanager':
-    message => 'NM_Controlled set to off'
+      notify { 'networkmanager':
+        message => 'NM_Controlled set to off'
+      }
+    }
+    ubuntu, debian: {
+      #Still to figure out ubuntu idiosyncracies
+      }
   }
 }
 
