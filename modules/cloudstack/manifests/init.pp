@@ -137,8 +137,11 @@ class cloudstack::agent {
     ensure => absent,
   }
 
-  exec {"sed -i 's/\"dhcp\"/\"static\"/g' /etc/sysconfig/network-scripts/ifcfg-em*":
-  }
+  #exec {"sed -i 's/IPADDR=@ipaddress_em1/IPADDR=@ipaddress_em1/g' /etc/sysconfig/network-scripts/ifcfg-em1":
+  #}
+
+  #  exec {"sed -i 's/\"dhcp\"/\"static\"/g' /etc/sysconfig/network-scripts/ifcfg-em*":
+  #}
 
   exec {"sed -i '/NM_CONTROLLED=/d' /etc/sysconfig/network-scripts/ifcfg-*":
     notify => Notify['networkmanager'],
