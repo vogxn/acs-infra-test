@@ -140,17 +140,25 @@ class cloudstack::agent {
   case $operatingsystem {
     centos, redhat : {
       exec {"/bin/echo 'IPADDR=$ipaddress_em1' >> /etc/sysconfig/network-scripts/ifcfg-em1":
+        path   => "/etc/sysconfig/network-scripts/",
+        onlyif => '$(grep -E IPADDR /etc/sysconfig/network-scripts/ifcfg-em1 | wc -l) -eq 0'
+      }
+      exec {"/bin/echo 'NETMASK=255.255.255.128' >> /etc/sysconfig/network-scripts/ifcfg-em1":
         path => "/etc/sysconfig/network-scripts/",
+        onlyif => '$(grep -E NETMASK /etc/sysconfig/network-scripts/ifcfg-em1 | wc -l) -eq 0'
       }
       exec {"/bin/sed -i 's/\"dhcp\"/\"static\"/g' /etc/sysconfig/network-scripts/ifcfg-em*":
       }
-
       exec {"/bin/sed -i '/NM_CONTROLLED=/d' /etc/sysconfig/network-scripts/ifcfg-*":
         notify => Notify['networkmanager'],
       }
 
       notify { 'networkmanager':
         message => 'NM_Controlled set to off'
+      }
+
+      file {'/etc/sysconfig/network-scripts/ifcfg-eth0':
+        ensure => absent,
       }
     }
     ubuntu, debian: {
@@ -266,9 +274,9 @@ class cloudstack::files {
     content => template('cloudstack/hosts'),
   }
 
-  file { '/etc/resolv.conf':
-    content => template('cloudstack/resolv.conf'),
-  }
+  #  file { '/etc/resolv.conf':
+  #  content => template('cloudstack/resolv.conf'),
+  #}
 
   file { '/root/redeploy.sh':
     source  => 'puppet:///cloudstack/redeploy.sh',
