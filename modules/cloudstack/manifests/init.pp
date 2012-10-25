@@ -142,6 +142,9 @@ class cloudstack::agent {
       exec {"/bin/echo 'IPADDR=$ipaddress_em1' >> /etc/sysconfig/network-scripts/ifcfg-em1":
         path => "/etc/sysconfig/network-scripts/",
       }
+      exec {"/bin/echo 'GATEWAY=$gateway_fact' >> /etc/sysconfig/network":
+        path => "/etc/sysconfig/network",
+      }
       exec {"/bin/sed -i 's/\"dhcp\"/\"static\"/g' /etc/sysconfig/network-scripts/ifcfg-em*":
       }
 
