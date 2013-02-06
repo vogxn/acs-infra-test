@@ -1,11 +1,6 @@
 #Apache Cloudstack - Module for the Management Server and Agent
 #
 
-class common::data {
-  $nameservers = ['10.223.75.10', '10.223.110.254', '8.8.8.8']
-  $puppetmaster = '10.223.75.10'
-}
-
 class cloudstack {
   case $operatingsystem  {
     centos: { include cloudstack::no_selinux }
@@ -88,7 +83,13 @@ class cloudstack {
     mode    => 644,
     require => Service['cloud-management'],
   }
-
+  file { '/usr/lib64/cloud/common/scripts/vm/hypervisor/xenserver/vhd-util':
+    source => 'http://nfs/vhd-util',
+    ensure => present,
+    owner => 'root',
+    mode => 755,
+    require => Service['cloud-management'],
+  }
   file { '/var/log/cloud/management/management-server.log':
     ensure  => present,
     owner   => 'cloud',
@@ -262,7 +263,6 @@ class cloudstack::ports {
 
 class cloudstack::files {
   include common::data
-  $nameservers = $common::data::nameservers
   file { '/etc/sudoers':
     source => 'puppet:///cloudstack/sudoers',
     mode   => 440,
