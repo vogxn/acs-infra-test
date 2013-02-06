@@ -9,7 +9,6 @@ class cloudstack {
   include cloudstack::repo
   include cloudstack::ports
   include cloudstack::files
-  include common::data
   include mysql
 
   #TODO: Update to latest systemvm urls
@@ -113,7 +112,6 @@ class cloudstack::agent {
   }
   include cloudstack::repo
   include cloudstack::files
-  include common::data
 
   case $operatingsystem {
     centos,redhat : {
@@ -262,7 +260,6 @@ class cloudstack::ports {
 }
 
 class cloudstack::files {
-  include common::data
   file { '/etc/sudoers':
     source => 'puppet:///cloudstack/sudoers',
     mode   => 440,
