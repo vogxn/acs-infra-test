@@ -30,28 +30,28 @@ class cloudstack {
     timeout => 0,
   }
   
-  file { '/usr/share/cloud/setup/templates.sql':
+  file { '/usr/share/cloudstack/setup/templates.sql':
     source  => 'puppet:///cloudstack/templates.sql',
     mode    => 644,
     owner   => root,
     group   => root,
-    before  => Exec['cloud-setup-databases cloud:cloud@localhost --deploy-as=root'],
-    require => [Package['cloud-client'], Package['cloud-server']],
+    before  => Exec['cloudstack-setup-databases cloud:cloud@localhost --deploy-as=root'],
+    require => [Package['cloudstack-common'], Package['cloudstack-management']],
   }
 
-  exec {'cloud-setup-databases cloud:cloud@localhost --deploy-as=root':
+  exec {'cloudstack-setup-databases cloud:cloud@localhost --deploy-as=root':
     creates  => '/var/lib/mysql/cloud',
-    require => [Package['cloud-client'], Package['cloud-server']],
-    before   => Exec['cloud-setup-management'],
+    require => [Package['cloudstack-common'], Package['cloudstack-management']],
+    before   => Exec['cloudstack-setup-management'],
   }
-  exec {'cloud-setup-management':
-    creates => '/var/run/cloud-management.pid',
-    before  => Service['cloud-management'],
+  exec {'cloudstack-setup-management':
+    creates => '/var/run/cloudstack-management.pid',
+    before  => Service['cloudstack-management'],
   }
 
   case $operatingsystem {
     centos,redhat : {
-      $packagelist =  [ 'cloud-server', 'cloud-client']
+      $packagelist =  [ 'cloudstack-management', 'cloudstack-common']
       package { $packagelist:
          ensure  => installed,
          require => Yumrepo['cstemp'],
@@ -61,7 +61,7 @@ class cloudstack {
       }
     }
     ubuntu, debian: {
-      $packagelist =  [ 'cloud-server', 'cloud-client']
+      $packagelist =  [ 'cloudstack-management', 'cloudstack-common']
       package { $packagelist:
          ensure  => latest,
          require => File['/etc/apt/sources.list.d/cloudstack.list'],
@@ -71,37 +71,37 @@ class cloudstack {
     }
   }
 
-  service { 'cloud-management':
+  service { 'cloudstack-management':
     ensure => running,
   }
 
   file { '/root/mslog':
     ensure  => link,
-    target  => '/var/log/cloud/management/management-server.log',
+    target  => '/var/log/cloudstack/management/management-server.log',
     owner   => 'root',
     mode    => 644,
-    require => Service['cloud-management'],
+    require => Service['cloudstack-management'],
   }
-  file { '/usr/lib64/cloud/common/scripts/vm/hypervisor/xenserver/vhd-util':
+  file { '/usr/lib64/cloudstack/common/scripts/vm/hypervisor/xenserver/vhd-util':
     source => 'puppet://cloudstack/vhd-util',
     ensure => present,
     owner => 'root',
     mode => 755,
-    require => Service['cloud-management'],
+    require => Service['cloudstack-management'],
   }
-  file { '/var/log/cloud/management/management-server.log':
+  file { '/var/log/cloudstack/management/management-server.log':
     ensure  => present,
     owner   => 'cloud',
     group   => 'cloud',
     mode    => 644,
-    require => Service['cloud-management']
+    require => Service['cloudstack-management']
   }
-  file { '/var/log/cloud/management/api-server.log':
+  file { '/var/log/cloudstack/management/api-server.log':
     ensure  => present,
     owner   => 'cloud',
     group   => 'cloud',
     mode    => 644,
-    require => Service['cloud-management']
+    require => Service['cloudstack-management']
   }
 }
 
@@ -115,14 +115,14 @@ class cloudstack::agent {
 
   case $operatingsystem {
     centos,redhat : {
-      $packagelist =  [ 'cloud-agent' ]
+      $packagelist =  [ 'cloudstack-agent' ]
       package { $packagelist:
          ensure  => installed,
          require => Yumrepo['cstemp'],
       }
     }
     ubuntu, debian: {
-      $packagelist =  [ 'cloud-agent' ]
+      $packagelist =  [ 'cloudstack-agent' ]
       package { $packagelist:
          ensure  => latest,
          require => [File['/etc/apt/sources.list.d/cloudstack.list'], Exec['apt-get update']],
