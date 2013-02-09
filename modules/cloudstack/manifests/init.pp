@@ -30,7 +30,7 @@ class cloudstack {
     timeout => 0,
   }
   
-  file { '/usr/share/cloudstack/setup/templates.sql':
+  file { '/usr/share/cloudstack-management/setup/templates.sql':
     source  => 'puppet:///cloudstack/templates.sql',
     mode    => 644,
     owner   => root,
@@ -82,7 +82,7 @@ class cloudstack {
     mode    => 644,
     require => Service['cloudstack-management'],
   }
-  file { '/usr/lib64/cloudstack/common/scripts/vm/hypervisor/xenserver/vhd-util':
+  file { '/usr/share/cloudstack-common/scripts/vm/hypervisor/xenserver/vhd-util':
     source => 'puppet://cloudstack/vhd-util',
     ensure => present,
     owner => 'root',
