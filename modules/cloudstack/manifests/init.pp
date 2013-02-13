@@ -83,7 +83,7 @@ class cloudstack {
     require => Service['cloudstack-management'],
   }
   file { '/usr/share/cloudstack-common/scripts/vm/hypervisor/xenserver/vhd-util':
-    source => 'puppet://cloudstack/vhd-util',
+    source => 'puppet:///cloudstack/vhd-util',
     ensure => present,
     owner => 'root',
     mode => 755,
