@@ -28,6 +28,7 @@ class cloudstack {
   exec {'/bin/bash /root/secseeder.sh':
     require => Class[cloudstack::files],
     timeout => 0,
+    logoutput => true,
   }
   
   file { '/usr/share/cloudstack-management/setup/templates.sql':
