@@ -107,6 +107,8 @@ class cloudstack {
 }
 
 class cloudstack::agent {
+  $netmask='255.255.255.192'
+
   case $operatingsystem  {
     centos: { include cloudstack::no_selinux }
     redhat: { include cloudstack::no_selinux }
@@ -143,7 +145,7 @@ class cloudstack::agent {
         path   => "/etc/sysconfig/network-scripts/",
         onlyif => '$(grep -E IPADDR /etc/sysconfig/network-scripts/ifcfg-em1 | wc -l) -eq 0'
       }
-      exec {"/bin/echo 'NETMASK=255.255.255.128' >> /etc/sysconfig/network-scripts/ifcfg-em1":
+      exec {"/bin/echo 'NETMASK=$netmask' >> /etc/sysconfig/network-scripts/ifcfg-em1":
         path => "/etc/sysconfig/network-scripts/",
         onlyif => '$(grep -E NETMASK /etc/sysconfig/network-scripts/ifcfg-em1 | wc -l) -eq 0'
       }
@@ -159,6 +161,11 @@ class cloudstack::agent {
 
       file {'/etc/sysconfig/network-scripts/ifcfg-eth0':
         ensure => absent,
+      }
+
+      file { '/etc/cloudstack/agent/agent.properties':
+        source  => 'puppet:///cloudstack/agent.properties',
+        mode    => 744,
       }
     }
     ubuntu, debian: {
