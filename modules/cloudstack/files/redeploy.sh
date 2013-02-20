@@ -2,7 +2,7 @@
 #set -x
 usage() {
   printf "Usage: %s:\n
-	[-s nfs path to secondary storage <nfs-server:/export/path> ] [-u url to system template] [-h hypervisor type (kvm|xenserver|vmware) ]\n" $(basename $0) >&2
+	[-s nfs path to secondary storage <nfs-server:/export/path> ] [-u url to system template] [-h hypervisor type (kvm|xen|vmware) ]\n" $(basename $0) >&2
 
   printf "\nThe -s flag will clean the secondary path and install the specified
 hypervisor's system template as per -h, if -h is not given then xenserver is
@@ -15,17 +15,23 @@ failed() {
 }
 
 #flags
-sflag=
-hflag=
-uflag=
+sflag=0
+hflag=0
+uflag=0
 
 VERSION="1.0.1"
 echo "Redeploy Version: $VERSION"
 
 #some defaults
 spath='nfs2.lab.vmops.com:/export/home/bvt/secondary'
-hypervisor='xenserver'
+
+xensysvmurl='http://download.cloud.com/templates/acton/acton-systemvm-02062012.vhd.bz2'
+kvmsysvmurl='http://download.cloud.com/templates/acton/acton-systemvm-02062012.qcow2.bz2'
+vmwaresysvmurl='http://download.cloud.com/templates/burbank/burbank-systemvm-08012012.ova'
+
+hypervisor='xen'
 sysvmurl='http://download.cloud.com/templates/acton/acton-systemvm-02062012.vhd.bz2'
+
 systemvm_seeder='/usr/share/cloudstack-common/scripts/storage/secondary/cloud-install-sys-tmplt'
 
 while getopts 'u:s:h:' OPTION
@@ -46,6 +52,17 @@ do
   esac
 done
 
+if [[ $uflag -eq 0 ]]; then
+    case $hypervisor in
+    xen) sysvmurl=$xensysvmurl
+         ;;
+    kvm) sysvmurl=$kvmsysvmurl
+         ;;
+    vmware) sysvmurl=$vmwaresysvmurl
+         ;;
+    esac
+fi
+
 if [[ -e /etc/redhat-release ]]
 then 
 	cat /etc/redhat-release
@@ -59,20 +76,20 @@ proc=$(ps aux | grep cloud | wc -l)
 if [[ $proc -lt 2 ]]
 then
         echo "Cloud process not running"
-        if [[ -e /var/run/cloud-management.pid ]]
+        if [[ -e /var/run/cloudstack-management.pid ]]
         then
-            rm -f /var/run/cloud-management.pid
+            rm -f /var/run/cloudstack-management.pid
         fi
 else
         #stop service
-        service cloud-management stop
+        service cloudstack-management stop
 fi
 
 #TODO: archive old logs
 #refresh log state 
-cat /dev/null > /var/log/cloud/management/management-server.log
-cat /dev/null > /var/log/cloud/management/api-server.log
-cat /dev/null > /var/log/cloud/management/catalina.out
+cat /dev/null > /var/log/cloudstack/management/management-server.log
+cat /dev/null > /var/log/cloudstack/management/api-server.log
+cat /dev/null > /var/log/cloudstack/management/catalina.out
 
 #replace disk size reqd to 1GB max
 sed -i 's/DISKSPACE=5120000/DISKSPACE=20000/g' $systemvm_seeder
