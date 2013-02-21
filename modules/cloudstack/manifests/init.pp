@@ -143,12 +143,12 @@ class cloudstack::agent {
     centos, redhat : {
       exec {"/bin/echo 'IPADDR=$ipaddress_em1' >> /etc/sysconfig/network-scripts/ifcfg-em1":
         path   => "/etc/sysconfig/network-scripts/",
-        onlyif => 'grep -q IPADDR /etc/sysconfig/network-scripts/ifcfg-em1'
+        onlyif => '/bin/grep -q IPADDR /etc/sysconfig/network-scripts/ifcfg-em1'
       }
 
       exec {"/bin/echo 'NETMASK=$netmask' >> /etc/sysconfig/network-scripts/ifcfg-em1":
         path => "/etc/sysconfig/network-scripts/",
-        onlyif => 'grep -q NETMASK /etc/sysconfig/network-scripts/ifcfg-em1'
+        onlyif => '/bin/grep -q NETMASK /etc/sysconfig/network-scripts/ifcfg-em1'
       }
 
       exec {"/bin/sed -i 's/\"dhcp\"/\"static\"/g' /etc/sysconfig/network-scripts/ifcfg-em*":
@@ -182,7 +182,7 @@ class cloudstack::no_selinux {
     source => 'puppet:///cloudstack/config',
   }
   exec { '/usr/sbin/setenforce 0':
-    onlyif => '/usr/sbin/getenforce | grep Enforcing',
+    onlyif => '/usr/sbin/getenforce | /bin/grep Enforcing',
   }
 }
 
