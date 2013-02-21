@@ -143,15 +143,17 @@ class cloudstack::agent {
     centos, redhat : {
       exec {"/bin/echo 'IPADDR=$ipaddress_em1' >> /etc/sysconfig/network-scripts/ifcfg-em1":
         path   => "/etc/sysconfig/network-scripts/",
-        onlyif => '$(grep -E IPADDR /etc/sysconfig/network-scripts/ifcfg-em1 | wc -l) -eq 0'
+        onlyif => 'grep -q IPADDR /etc/sysconfig/network-scripts/ifcfg-em1'
       }
 
       exec {"/bin/echo 'NETMASK=$netmask' >> /etc/sysconfig/network-scripts/ifcfg-em1":
         path => "/etc/sysconfig/network-scripts/",
         onlyif => 'grep -q NETMASK /etc/sysconfig/network-scripts/ifcfg-em1'
       }
+
       exec {"/bin/sed -i 's/\"dhcp\"/\"static\"/g' /etc/sysconfig/network-scripts/ifcfg-em*":
       }
+
       exec {"/bin/sed -i '/NM_CONTROLLED=/d' /etc/sysconfig/network-scripts/ifcfg-*":
         notify => Notify['networkmanager'],
       }
