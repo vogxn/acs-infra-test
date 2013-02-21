@@ -145,9 +145,10 @@ class cloudstack::agent {
         path   => "/etc/sysconfig/network-scripts/",
         onlyif => '$(grep -E IPADDR /etc/sysconfig/network-scripts/ifcfg-em1 | wc -l) -eq 0'
       }
+
       exec {"/bin/echo 'NETMASK=$netmask' >> /etc/sysconfig/network-scripts/ifcfg-em1":
         path => "/etc/sysconfig/network-scripts/",
-        onlyif => '$(grep -E NETMASK /etc/sysconfig/network-scripts/ifcfg-em1 | wc -l) -eq 0'
+        onlyif => 'grep -q NETMASK /etc/sysconfig/network-scripts/ifcfg-em1'
       }
       exec {"/bin/sed -i 's/\"dhcp\"/\"static\"/g' /etc/sysconfig/network-scripts/ifcfg-em*":
       }
