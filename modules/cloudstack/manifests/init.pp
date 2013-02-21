@@ -169,6 +169,7 @@ class cloudstack::agent {
       file { '/etc/cloudstack/agent/agent.properties':
         source  => 'puppet:///cloudstack/agent.properties',
         mode    => 744,
+        require => Package['cloudstack-agent'],
       }
     }
     ubuntu, debian: {
