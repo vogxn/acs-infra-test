@@ -118,14 +118,14 @@ class cloudstack::agent {
 
   case $operatingsystem {
     centos,redhat : {
-      $packagelist =  [ 'cloudstack-agent' ]
+      $packagelist =  [ 'cloudstack-agent', 'qemu-kvm' ]
       package { $packagelist:
          ensure  => installed,
          require => Yumrepo['cstemp'],
       }
     }
     ubuntu, debian: {
-      $packagelist =  [ 'cloudstack-agent' ]
+      $packagelist =  [ 'cloudstack-agent', 'qemu-kvm' ]
       package { $packagelist:
          ensure  => latest,
          require => [File['/etc/apt/sources.list.d/cloudstack.list'], Exec['apt-get update']],
