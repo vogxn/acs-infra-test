@@ -29,6 +29,7 @@ class cloudstack {
     require => Class[cloudstack::files],
     timeout => 0,
     logoutput => true,
+    require => Package['cloudstack-common'],
   }
   
   file { '/usr/share/cloudstack-management/setup/templates.sql':
