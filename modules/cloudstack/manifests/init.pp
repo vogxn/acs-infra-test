@@ -26,7 +26,7 @@ class cloudstack {
   }
 
   exec {'/bin/bash /root/secseeder.sh':
-    require => [Class[cloudstack::files], Package['cloudstack-common']],
+    require => [Class[cloudstack::files], Exec['cloudstack-setup-management']],
     timeout => 0,
     logoutput => true,
   }
