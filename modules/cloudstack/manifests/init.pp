@@ -171,6 +171,12 @@ class cloudstack::agent {
         mode    => 744,
         require => Package['cloudstack-agent'],
       }
+
+      #FIXME: Remove this after logging issues are fixed on KVM agent
+      exec { '/bin/mv log4j-cloud.xml log4j.xml':
+          cwd => '/etc/cloudstack/agent',
+          require => File['/etc/cloudstack/agent/agent.properties'],
+      }
     }
     ubuntu, debian: {
       #Still to figure out ubuntu idiosyncracies
