@@ -123,6 +123,10 @@ class cloudstack::agent {
          ensure  => installed,
          require => Yumrepo['cstemp'],
       }
+      service { 'libvirtd':
+        ensure => running,
+        require => Package['qemu-kvm'],
+      }
     }
     ubuntu, debian: {
       $packagelist =  [ 'cloudstack-agent', 'qemu-kvm' ]
