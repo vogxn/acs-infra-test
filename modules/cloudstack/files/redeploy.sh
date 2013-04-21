@@ -25,9 +25,9 @@ echo "Redeploy Version: $VERSION"
 #some defaults
 spath='nfs2.lab.vmops.com:/export/home/bvt/secondary'
 
-xensysvmurl='http://download.cloud.com/templates/acton/acton-systemvm-02062012.vhd.bz2'
-kvmsysvmurl='http://download.cloud.com/templates/acton/acton-systemvm-02062012.qcow2.bz2'
-vmwaresysvmurl='http://download.cloud.com/templates/burbank/burbank-systemvm-08012012.ova'
+xensysvmurl='http://nfs/templates/systemvm/xen/systemvmtemplate-2013-04-20-master-xen.vhd.bz2'
+kvmsysvmurl='http://nfs/templates/systemvm/kvm/systemvmtemplate-2013-04-20-master-kvm.qcow2.bz2'
+vmwaresysvmurl='http://nfs/templates/systemvm/vmware/systemvmtemplate-2013-04-20-master-vmware.ova'
 
 hypervisor='xen'
 sysvmurl='http://download.cloud.com/templates/acton/acton-systemvm-02062012.vhd.bz2'
