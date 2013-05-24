@@ -75,7 +75,13 @@ class cloudstack {
   service { 'cloudstack-management':
     ensure => running,
   }
-
+  
+  #Seed the syslog enabled log4j
+  file {'/etc/cloudstack/management/log4j-cloud.xml':
+        source => 'puppet:///cloudstack/log4j-management.xml',
+        mode   => 744,
+        require => Service['cloudstack-management'], 
+  }
   file { '/root/mslog':
     ensure  => link,
     target  => '/var/log/cloudstack/management/management-server.log',
@@ -97,7 +103,7 @@ class cloudstack {
     mode    => 644,
     require => Service['cloudstack-management']
   }
-  file { '/var/log/cloudstack/management/api-server.log':
+  file { '/var/log/cloudstack/management/apilog.log':
     ensure  => present,
     owner   => 'cloud',
     group   => 'cloud',
@@ -176,9 +182,8 @@ class cloudstack::agent {
         require => Package['cloudstack-agent'],
       }
 
-      #FIXME: Remove this after logging issues are fixed on KVM agent
       file {'/etc/cloudstack/agent/log4j.xml':
-        source => 'puppet:///cloudstack/log4j.xml',
+        source => 'puppet:///cloudstack/log4j-agent.xml',
         mode   => 744,
         require => File['/etc/cloudstack/agent/agent.properties'],
       }
