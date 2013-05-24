@@ -69,28 +69,28 @@ under the License.
    <!-- ================ -->
 
    <category name="com.cloud">
-     <priority value="INFO"/>
+     <priority value="DEBUG"/>
    </category>
    
    <category name="com.cloud.agent.metrics">
-     <priority value="INFO"/>
+     <priority value="DEBUG"/>
    </category>
    
    <category name="com.cloud.agent.resource.computing.ComputingResource$StorageMonitorTask">
-     <priority value="INFO"/>
+     <priority value="DEBUG"/>
    </category>
 
-   <!-- Limit the org.apache category to INFO as its DEBUG is verbose -->
+   <!-- Limit the org.apache category to DEBUG as its DEBUG is verbose -->
    <category name="org.apache">
-      <priority value="INFO"/>
+      <priority value="DEBUG"/>
    </category>
 
    <category name="org">
-      <priority value="INFO"/>
+      <priority value="DEBUG"/>
    </category>
    
    <category name="net">
-     <priority value="INFO"/>
+     <priority value="DEBUG"/>
    </category>
 
    <!-- ======================= -->
@@ -98,7 +98,7 @@ under the License.
    <!-- ======================= -->
 
    <root>
-      <level value="INFO"/>
+      <level value="DEBUG"/>
       <appender-ref ref="CONSOLE"/>
       <appender-ref ref="FILE"/>
    </root>
