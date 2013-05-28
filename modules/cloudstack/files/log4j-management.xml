@@ -58,7 +58,7 @@ under the License.
    <appender name="SYSLOG" class="org.apache.log4j.net.SyslogAppender">
       <param name="Threshold" value="DEBUG"/>
       <param name="SyslogHost" value="applecrumble"/>
-      <param name="Facility" value="RSYSLOG0"/>
+      <param name="Facility" value="LOCAL0"/>
       <param name="FacilityPrinting" value="true"/>
       <layout class="org.apache.log4j.EnhancedPatternLayout">
          <param name="ConversionPattern" value="%d{ISO8601} %-5p [%c{3}] (%t:%x) %m%n"/>
@@ -72,7 +72,7 @@ under the License.
    <appender name="ALERTSYSLOG" class="org.apache.cloudstack.syslog.AlertsSyslogAppender">
       <param name="Threshold" value="WARN"/>
       <param name="SyslogHosts" value=""/>
-      <param name="Facility" value="RSYSLOG0"/>
+      <param name="Facility" value="LOCAL0"/>
       <param name="FacilityPrinting" value="true"/>
       <layout class="org.apache.log4j.PatternLayout">
          <param name="ConversionPattern" value="%-5p [%c{3}] (%t:%x) %m%n"/>
