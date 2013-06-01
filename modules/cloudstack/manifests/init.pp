@@ -49,6 +49,11 @@ class cloudstack {
     creates => '/var/run/cloudstack-management.pid',
     before  => Service['cloudstack-management'],
   }
+  file { '/usr/share/cloudstack-management/logs/catalina.out':
+    owner   => 'root',
+    mode    => 777,
+    before => Service['cloudstack-management'],
+  }
 
   case $operatingsystem {
     centos,redhat : {
