@@ -182,7 +182,7 @@ class cloudstack::agent {
         require => Package['cloudstack-agent'],
       }
 
-      file {'/etc/cloudstack/agent/log4j.xml':
+      file {'/etc/cloudstack/agent/log4j-cloud.xml':
         source => 'puppet:///cloudstack/log4j-agent.xml',
         mode   => 744,
         require => File['/etc/cloudstack/agent/agent.properties'],
