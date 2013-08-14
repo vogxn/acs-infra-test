@@ -124,7 +124,7 @@ class cloudstack::agent {
 
   case $operatingsystem {
     centos,redhat : {
-      $packagelist =  [ 'cloudstack-agent', 'qemu-kvm', 'libvirt' ]
+      $packagelist =  [ 'cloudstack-agent', 'qemu-kvm', 'libvirt', 'expect' ]
       package { $packagelist:
          ensure  => installed,
          require => Yumrepo['cstemp'],
