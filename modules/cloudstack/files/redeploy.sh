@@ -25,12 +25,12 @@ echo "Redeploy Version: $VERSION"
 #some defaults
 spath='nfs2.lab.vmops.com:/export/home/bvt/secondary'
 
-xensysvmurl='http://nfs/templates/systemvm/xen/systemvmtemplate-master-xen.vhd.bz2'
-kvmsysvmurl='http://nfs/templates/systemvm/kvm/systemvmtemplate-master-kvm.qcow2.bz2'
-vmwaresysvmurl='http://nfs/templates/systemvm/vmware/systemvmtemplate-master-vmware.ova'
+xensysvmurl='http://nfs/templates/systemvm/xen/systemvmtemplate-xen.vhd.bz2'
+kvmsysvmurl='http://nfs/templates/systemvm/kvm/systemvmtemplate-kvm.qcow2.bz2'
+vmwaresysvmurl='http://nfs/templates/systemvm/vmware/systemvmtemplate-vmware.ova'
 
 hypervisor='xen'
-sysvmurl='http://download.cloud.com/templates/acton/acton-systemvm-02062012.vhd.bz2'
+sysvmurl='http://nfs/templates/systemvm/xen/systemvmtemplate-xen.vhd.bz2'
 
 systemvm_seeder='/usr/share/cloudstack-common/scripts/storage/secondary/cloud-install-sys-tmplt'
 
